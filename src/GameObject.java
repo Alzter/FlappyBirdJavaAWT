@@ -1,4 +1,3 @@
-
 import javax.swing.JFrame;    // Window class
 import java.awt.*;
 import java.io.File;          // Input/Output handling classes
@@ -10,6 +9,7 @@ import java.awt.geom.*;
 public class GameObject extends Rectangle2D.Double{
 
     private Image sprite;
+    private Point spriteSize;
 
     // Overwritable physics process function.
     public void process(double delta, GameInput inputs){
@@ -27,6 +27,7 @@ public class GameObject extends Rectangle2D.Double{
         this(x,y,width,height); // Call previous constructor function to set Rectangle parameters.
         sprite = loadImage(spriteFilePath);
         
+        spriteSize = new Point(sprite.getWidth(null), sprite.getHeight(null));
     }
 
     // Sprite draw method.
@@ -39,10 +40,10 @@ public class GameObject extends Rectangle2D.Double{
             Point2D.Double screenPosition = new Point2D.Double((x - camera.x) * camera.zoom.x, (y - camera.y) * camera.zoom.y);
             
             // Set "spriteSize" to how big we want the sprite to be in pixels.
-            Point2D.Double spriteSize = new Point2D.Double(width * camera.zoom.x, height * camera.zoom.y);
+            Point2D.Double spriteCameraSize = new Point2D.Double(spriteSize.x * camera.zoom.x, spriteSize.y * camera.zoom.y);
 
             // Get the Graphics object to draw the sprite in the Frame.
-            g.drawImage(sprite, (int)screenPosition.x, (int)screenPosition.y, (int)spriteSize.x, (int)spriteSize.y, c);
+            g.drawImage(sprite, (int)screenPosition.x, (int)screenPosition.y, (int)spriteCameraSize.x, (int)spriteCameraSize.y, c);
         }
     }
 
