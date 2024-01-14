@@ -36,8 +36,8 @@ public class PlayerBird extends GameObject{
                 break;
         }
         
-        applyGravity();
-        applyVelocity();
+        applyGravity(delta);
+        applyVelocity(delta);
 
     }
 
@@ -47,12 +47,12 @@ public class PlayerBird extends GameObject{
         }
     }
 
-    private void applyGravity(){
+    private void applyGravity(double delta){
         velocity.y += gravity;
     }
 
-    private void applyVelocity(){
-        x += velocity.x;
-        y += velocity.y;
+    private void applyVelocity(double delta){
+        x += velocity.x * delta;
+        y += velocity.y * delta;
     }
 }
