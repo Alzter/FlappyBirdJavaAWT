@@ -35,14 +35,14 @@ public class GameObject extends Rectangle2D.Double{
         // If a sprite Image resource was assigned to the object:
         if (sprite != null){
 
-            // Add the Camera's position to the position of the object to get the object's global position.
-            Point2D.Double globalPosition = new Point2D.Double(x - camera.x, y - camera.y);
-
-            // Cast the object's global position to an integer.
-            Point intGlobalPosition = new Point((int)globalPosition.x, (int)globalPosition.y);
+            // Get the position the object should render on the screen based on the camera's position and zoom level.
+            Point2D.Double screenPosition = new Point2D.Double((x - camera.x) * camera.zoom.x, (y - camera.y) * camera.zoom.y);
             
+            // Set "spriteSize" to how big we want the sprite to be in pixels.
+            Point2D.Double spriteSize = new Point2D.Double(width * camera.zoom.x, height * camera.zoom.y);
+
             // Get the Graphics object to draw the sprite in the Frame.
-            g.drawImage(sprite, intGlobalPosition.x, intGlobalPosition.y, c);
+            g.drawImage(sprite, (int)screenPosition.x, (int)screenPosition.y, (int)spriteSize.x, (int)spriteSize.y, c);
         }
     }
 

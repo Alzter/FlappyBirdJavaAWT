@@ -12,7 +12,9 @@ public class FlappyJava extends Canvas {
 
     private static final Point windowSize = new Point(400,400);
     private static final int fps = 60;
-    private static final long delta = (1000)/fps; // How many milliseconds should it take for a frame to elapse?
+    private static final long frameTime = (1000)/fps; // How many milliseconds should it take for a frame to elapse?
+    private long previousFrameTime; // How many ms did the previous frame take to render?
+    private long delta;
     private JFrame window;
     private Camera camera;
     private GameInput inputs;
@@ -30,7 +32,7 @@ public class FlappyJava extends Canvas {
     public FlappyJava(String windowName, int width, int height){
         
         inputs = new GameInput();
-        camera = new Camera(0,0);
+        camera = new Camera(0,0,2,2);
 
         setSize(width,height);
 
@@ -60,7 +62,8 @@ public class FlappyJava extends Canvas {
     public static void main(String[] args) {
         FlappyJava frame = new FlappyJava("Flappy Java", windowSize.x,windowSize.y);
 
-        frame.bird = new PlayerBird(0d,windowSize.y * 0.5);
+        // Sppawn the bird at the vertical center of the screen.
+        frame.bird = new PlayerBird(0d,windowSize.y * 0.5 / frame.camera.zoom.y);
         frame.addObject(frame.bird);
         
         frame.gameLoop();
@@ -80,7 +83,7 @@ public class FlappyJava extends Canvas {
 
             // Wait a single frame. Source: https://stackoverflow.com/questions/46626715/how-do-i-properly-render-at-a-high-frame-rate-in-pure-java
             try {
-                Thread.sleep(delta);
+                Thread.sleep(frameTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -90,6 +93,10 @@ public class FlappyJava extends Canvas {
 
     // Game process function. Called every frame.
     private void process(){
+        // How long did it take to render the previous frame?
+        previousFrameTime = frameTime; // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
+        delta = (frameTime / frameTime); // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
+
         inputs.process();
 
         // Make all game objects process.
@@ -98,7 +105,7 @@ public class FlappyJava extends Canvas {
         }
 
         // Ensure the bird is at the horizontal center of the window
-        camera.x = bird.x - windowSize.x * cameraPlayerHorizontalPosition;
+        camera.x = (bird.x * camera.zoom.x - windowSize.x * cameraPlayerHorizontalPosition) / camera.zoom.x;
     }
 
     public void paint(Graphics g){
