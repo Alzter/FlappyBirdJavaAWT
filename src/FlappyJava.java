@@ -10,11 +10,13 @@ import java.util.ArrayList;   // Flexible size arrays
 
 public class FlappyJava extends Canvas {
 
-    private static final Point windowSize = new Point(400,400);
-    private static final int fps = 60;
-    private static final long frameTime = (1000)/fps; // How many milliseconds should it take for a frame to elapse?
-    private long previousFrameTime; // How many ms did the previous frame take to render?
-    private long delta;
+    private static final Point windowSize = new Point(400,400);   // How big should the game window be?
+    private static final int gameZoom = 1;                            // How zoomed in should the game be?
+    private static final int fps = 60;                                // Target FPS of game
+    private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
+
+    private long previousFrameTime;                                   // How many milliseconds did the previous frame take?
+    private long delta;                                               // previousFrameTime / targetFrameTime
     private JFrame window;
     private Camera camera;
     private GameInput inputs;
@@ -26,13 +28,14 @@ public class FlappyJava extends Canvas {
     // 1   = Player is on the left-hand side of the screen
     
     private ArrayList<GameObject> objects;
+    private ArrayList<GameObject> ground;
     private PlayerBird bird;
     
     // CONSTRUCTOR
     public FlappyJava(String windowName, int width, int height){
         
         inputs = new GameInput();
-        camera = new Camera(0,0,2,2);
+        camera = new Camera(0,0,gameZoom,gameZoom);
 
         setSize(width,height);
 
@@ -62,11 +65,19 @@ public class FlappyJava extends Canvas {
     public static void main(String[] args) {
         FlappyJava frame = new FlappyJava("Flappy Java", windowSize.x,windowSize.y);
 
-        // Sppawn the bird at the vertical center of the screen.
-        frame.bird = new PlayerBird(0d,windowSize.y * 0.5 / frame.camera.zoom.y);
-        frame.addObject(frame.bird);
-        
+        frame.initialiseGame();
         frame.gameLoop();
+    }
+
+    public void initialiseGame(){
+        // Spawn the bird at the vertical center of the screen.
+        bird = new PlayerBird(0d,windowSize.y * 0.5 / camera.zoom.y);
+
+        addObject(bird);
+
+        // Add a ground object at the bottom of the window.
+        GameObject ground = new Ground(0, (windowSize.y / camera.zoom.y) - Ground.size.y);
+        addObject(ground);
     }
     
     private void addObject(GameObject object){ objects.add(object); } 
@@ -83,7 +94,7 @@ public class FlappyJava extends Canvas {
 
             // Wait a single frame. Source: https://stackoverflow.com/questions/46626715/how-do-i-properly-render-at-a-high-frame-rate-in-pure-java
             try {
-                Thread.sleep(frameTime);
+                Thread.sleep(targetFrameTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -94,8 +105,8 @@ public class FlappyJava extends Canvas {
     // Game process function. Called every frame.
     private void process(){
         // How long did it take to render the previous frame?
-        previousFrameTime = frameTime; // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
-        delta = (frameTime / frameTime); // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
+        previousFrameTime = targetFrameTime; // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
+        delta = (targetFrameTime / targetFrameTime); // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
 
         inputs.process();
 
