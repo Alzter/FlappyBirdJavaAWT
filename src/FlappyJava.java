@@ -36,6 +36,7 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> objects;
     private ArrayList<GameObject> groundObjects;
     private ArrayList<GameObject> pipeObjects;
+    private ArrayList<GameObject> backgroundObjects;
     private PlayerBird bird;
 
     private ScoreDisplay scoreDisplay;
@@ -59,6 +60,7 @@ public class FlappyJava extends Canvas {
         objects = new ArrayList<GameObject>();
         groundObjects = new ArrayList<GameObject>();
         pipeObjects = new ArrayList<GameObject>();
+        backgroundObjects = new ArrayList<GameObject>();
 
         scoreDisplay = new ScoreDisplay();
 
@@ -76,12 +78,13 @@ public class FlappyJava extends Canvas {
         });
     }
 
-    // MAIN function
-    public static void main(String[] args) {
-        FlappyJava frame = new FlappyJava("Flappy Java", windowSize.x,windowSize.y);
+    public void restartGame(){
+        objects = new ArrayList<GameObject>();
+        groundObjects = new ArrayList<GameObject>();
+        pipeObjects = new ArrayList<GameObject>();
+        backgroundObjects = new ArrayList<GameObject>();
 
-        frame.initialiseGame();
-        frame.gameLoop();
+        initialiseGame();
     }
 
     public void initialiseGame(){
@@ -96,14 +99,15 @@ public class FlappyJava extends Canvas {
 
         roofYPosition = camera.getY();
         addGroundObjects();
+        addBackgroundObjects();
     }
 
-    public void restartGame(){
-        objects = new ArrayList<GameObject>();
-        groundObjects = new ArrayList<GameObject>();
-        pipeObjects = new ArrayList<GameObject>();
+    // MAIN function
+    public static void main(String[] args) {
+        FlappyJava frame = new FlappyJava("Flappy Java", windowSize.x,windowSize.y);
 
-        initialiseGame();
+        frame.initialiseGame();
+        frame.gameLoop();
     }
 
     // Add the ground objects to the bottom of the game window. Add enough ground to cover the whole window.
@@ -125,6 +129,19 @@ public class FlappyJava extends Canvas {
 
             groundObjects.add(ground);
             addObject(ground);
+        }
+    }
+
+    public void addBackgroundObjects(){
+        // How many ground objects do we need to fill the screen?
+        int backgroundObjectsNeeded = (int)Math.ceil((windowSize.x / camera.getZoomX()) / Background.size.x) + 1;
+
+        
+        for(int i = 0; i < backgroundObjectsNeeded; i++){
+            Background background = new Background(camera.getX() + Background.size.x * i, roofYPosition);
+
+            backgroundObjects.add(background);
+            addObject(background);
         }
     }
 
@@ -250,8 +267,11 @@ public class FlappyJava extends Canvas {
 
         updateCamera(camera);
 
-        // Ensure the ground repeats endlessly horizontally across the screen.
+        // Ensure the ground tiles repeat endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
+
+        // Ensure the background tiles repeat endlessly horizontally across the screen.
+        updateArrayOfBackgroundObjectsToRepeatHorizontally(backgroundObjects, Background.size.x);
 
         
         deletePipesBehindPlayer(pipeObjects);
