@@ -37,6 +37,8 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> pipeObjects;
     private PlayerBird bird;
 
+    private ScoreDisplay scoreDisplay;
+
     public int score = 0;
     
     // CONSTRUCTOR
@@ -56,6 +58,8 @@ public class FlappyJava extends Canvas {
         objects = new ArrayList<GameObject>();
         groundObjects = new ArrayList<GameObject>();
         pipeObjects = new ArrayList<GameObject>();
+
+        scoreDisplay = new ScoreDisplay();
 
         // Mouse click event handling code:
         addMouseListener(new MouseAdapter() { 
@@ -254,6 +258,10 @@ public class FlappyJava extends Canvas {
         for (GameObject object : objects){
             object.paint(g, this, camera);
         }
+
+        // Draw the score display.
+        scoreDisplay.setScore(score);
+        scoreDisplay.paint(g, this, camera, windowSize);
     }
 
     // Class which exists to compare two game objects by their Z indexes.
