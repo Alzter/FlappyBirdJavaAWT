@@ -246,7 +246,7 @@ public class FlappyJava extends Canvas {
 
         // Constrain the bird's y position within the ceiling and floor
         bird.y = Math.max(bird.y, roofYPosition);
-        bird.y = Math.min(bird.y, groundYPosition - bird.height);
+        bird.y = Math.min(bird.y, groundYPosition - bird.height + 1);
 
         updateCamera(camera);
 
