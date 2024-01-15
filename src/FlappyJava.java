@@ -137,7 +137,7 @@ public class FlappyJava extends Canvas {
         }
 
         // If no pipes exist at the desired pipe position, spawn a new one.
-        Pipe pipe = new Pipe(nextPipePosition, 0);
+        Pipe pipe = new Pipe(nextPipePosition, 0, true);
 
         pipes.add(pipe);
         addObject(pipe);

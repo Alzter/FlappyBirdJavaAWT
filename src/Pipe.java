@@ -2,10 +2,16 @@ import java.awt.Point;
 
 public class Pipe extends GameObject{
 
-    private static final String sprite = "images/pipe.png";
-    public static final Point size = new Point(26,160);
+    private static final String spriteTop = "images/pipe_top.png";
+    private static final String spriteBottom = "images/pipe_bottom.png";
+    public static final Point size = new Point(26,200);
 
-    public Pipe(double x, double y){
-        super(x,y,size.x,size.y,sprite);
+    public Pipe(double x, double y, boolean top){
+        super(x,y - size.y * boolToInt(top),size.x,size.y,(top) ? spriteTop : spriteBottom);
+        
+    }
+
+    private static int boolToInt(boolean b){
+        return (b) ? 1 : 0;
     }
 }
