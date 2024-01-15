@@ -16,7 +16,7 @@ public class FlappyJava extends Canvas {
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
-    private static final int pipeDistance = 50;                       // How far apart should each pipe obstacle be in pixels?
+    private static final int pipeDistance = 200;                      // How far apart should each pipe obstacle be in pixels?
 
     private long previousFrameTime;                                   // How many milliseconds did the previous frame take?
     private long delta;                                               // previousFrameTime / targetFrameTime
@@ -129,7 +129,23 @@ public class FlappyJava extends Canvas {
         // Get the next pipe position by finding the next multiple of the pipeDistance from rightEdgeOfScreen
         double nextPipePosition = Math.ceil(rightEdgeOfScreen / pipeDistance) * pipeDistance;
 
-        System.out.println(nextPipePosition);
+        // Check if any pipe objects already exist at the next pipe position.
+        for (GameObject pipe : pipes){
+            if (pipe.x == nextPipePosition){
+                return;
+            }
+        }
+
+        // If no pipes exist at the desired pipe position, spawn a new one.
+        Pipe pipe = new Pipe(nextPipePosition, 0);
+
+        pipes.add(pipe);
+        addObject(pipe);
+    }
+
+    // Delete pipes which are behind the player to free memory.
+    private void deletePipesBehindPlayer(GameObject player, ArrayList<GameObject> pipes){
+
     }
     
     private void addObject(GameObject object){ objects.add(object); } 
