@@ -121,7 +121,7 @@ public class FlappyJava extends Canvas {
     }
 
     // Spawn pipes in front of the player if there are none ahead.
-    private void spawnPipesInFrontOfPlayer(GameObject player, ArrayList<GameObject> pipes, int pipeDistance){
+    private void spawnPipesInFrontOfPlayer(ArrayList<GameObject> pipes, int pipeDistance){
 
         // Get the global position for the right-hand side of the screen.
         double rightEdgeOfScreen = camera.getX() + windowSize.x / camera.getZoomX();
@@ -144,12 +144,24 @@ public class FlappyJava extends Canvas {
     }
 
     // Delete pipes which are behind the player to free memory.
-    private void deletePipesBehindPlayer(GameObject player, ArrayList<GameObject> pipes){
+    private void deletePipesBehindPlayer(ArrayList<GameObject> pipes){
 
+        ArrayList<GameObject> pipesToRemove = new ArrayList<GameObject>();
+
+        for (GameObject pipe : pipes){
+            double cullPosition = camera.getX() - pipe.width * camera.getZoomX();
+            if (pipe.x <= cullPosition){
+                pipesToRemove.add(pipe);
+            }
+        }
+        for (GameObject pipe : pipesToRemove){
+            pipes.remove(pipe);
+            removeObject(pipe);
+        }
     }
     
     private void addObject(GameObject object){ objects.add(object); } 
-    private void deleteObject(GameObject object){ objects.remove(object); }
+    private void removeObject(GameObject object){ objects.remove(object); }
 
     // Master game loop function. Continues indefinitely
     private void gameLoop(){
@@ -188,7 +200,8 @@ public class FlappyJava extends Canvas {
         // Ensure the ground repeats endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
 
-        spawnPipesInFrontOfPlayer(bird, pipeObjects, pipeDistance);
+        spawnPipesInFrontOfPlayer(pipeObjects, pipeDistance);
+        deletePipesBehindPlayer(pipeObjects);
     }
 
     public void paint(Graphics g){
