@@ -13,8 +13,10 @@ public class FlappyJava extends Canvas {
 
     private static final Point windowSize = new Point(400,600);   // How big should the game window be?
     private static final int gameZoom = 2;                            // How zoomed in should the game be?
-    private static final int fps = 60;                                // Target FPS of game
-    private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
+    private static final int fps = 60;                                // FPS that the game shall run at.
+    private static final int targetFps = 60;                          // Target FPS of game (DO NOT CHANGE)
+    private static final long frameTime = (1000)/fps;                 // How many milliseconds will it take for a frame to elapse?
+    private static final long targetFrameTime = (1000)/targetFps;     // How many milliseconds should it take for a frame to elapse?
 
     private static final int pipeXDistance = 26 + 60;                 // How far apart should each pipe obstacle be in pixels?
     private static final int pipeYGap = 64;                           // How big should the gap in-between the pipes be in pixels?
@@ -194,7 +196,7 @@ public class FlappyJava extends Canvas {
 
             // Wait a single frame. Source: https://stackoverflow.com/questions/46626715/how-do-i-properly-render-at-a-high-frame-rate-in-pure-java
             try {
-                Thread.sleep(targetFrameTime);
+                Thread.sleep(frameTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -205,8 +207,8 @@ public class FlappyJava extends Canvas {
     // Game process function. Called every frame.
     private void process(){
         // How long did it take to render the previous frame?
-        previousFrameTime = targetFrameTime; // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
-        delta = (targetFrameTime / targetFrameTime); // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
+        previousFrameTime = frameTime; // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
+        delta = (previousFrameTime / targetFrameTime); // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
 
         inputs.process();
 

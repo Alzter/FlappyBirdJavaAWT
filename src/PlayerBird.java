@@ -48,7 +48,7 @@ public class PlayerBird extends GameObject{
     }
 
     private void applyGravity(double delta){
-        velocity.y += gravity;
+        velocity.y += gravity * delta;
     }
 
     private void applyVelocity(double delta){
