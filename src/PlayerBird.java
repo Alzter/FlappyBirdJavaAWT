@@ -27,11 +27,12 @@ public class PlayerBird extends GameObject{
         state = PlayerState.ALIVE;
     }
 
-    public void process(double delta, GameInput inputs){
+    public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
 
         switch (state){
             case ALIVE:
                 handlePlayerInput(inputs);
+                checkCollisions(objects);
                 break;
             case DEAD:
                 break;
@@ -43,17 +44,20 @@ public class PlayerBird extends GameObject{
     }
 
     public void checkCollisions(ArrayList<GameObject> objects){
-
+        
         for (GameObject o : objects){
-            if (o.intersects(this)){
-                die();
-                return;
+            if (o != this){
+                if (o.intersects(this)){
+                    die();
+                    return;
+                }
             }
         }
     }
 
     private void die(){
         velocity.x = 0;
+        velocity.y = 0;
         state = PlayerState.DEAD;
     }
 

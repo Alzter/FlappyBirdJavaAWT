@@ -216,11 +216,8 @@ public class FlappyJava extends Canvas {
 
         // Make all game objects process.
         for (GameObject object : objects){
-            object.process(delta, inputs);
+            object.process(delta, inputs, objects);
         }
-
-        bird.checkCollisions(pipeObjects);
-        bird.checkCollisions(groundObjects);
 
         // Constrain the bird's y position within the ceiling and floor
         bird.y = Math.max(bird.y, roofYPosition);

@@ -14,7 +14,7 @@ public class GameObject extends Rectangle2D.Double{
     public int zIndex = 0; // Sprites are sorted by Z indexes when rendering. Sprites with higher Z indexes render above ones with lower ones.
 
     // Overwritable physics process function.
-    public void process(double delta, GameInput inputs){
+    public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
         
     }
 
