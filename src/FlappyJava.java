@@ -16,6 +16,8 @@ public class FlappyJava extends Canvas {
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
+    private static final int pipeDistance = 50;                       // How far apart should each pipe obstacle be in pixels?
+
     private long previousFrameTime;                                   // How many milliseconds did the previous frame take?
     private long delta;                                               // previousFrameTime / targetFrameTime
     private JFrame window;
@@ -24,6 +26,7 @@ public class FlappyJava extends Canvas {
     
     private ArrayList<GameObject> objects;
     private ArrayList<GameObject> groundObjects;
+    private ArrayList<GameObject> pipeObjects;
     private PlayerBird bird;
     
     // CONSTRUCTOR
@@ -42,6 +45,7 @@ public class FlappyJava extends Canvas {
 
         objects = new ArrayList<GameObject>();
         groundObjects = new ArrayList<GameObject>();
+        pipeObjects = new ArrayList<GameObject>();
 
         // Mouse click event handling code:
         addMouseListener(new MouseAdapter() { 
@@ -66,15 +70,14 @@ public class FlappyJava extends Canvas {
     }
 
     public void initialiseGame(){
-        // Spawn the bird at the top of the screen.
+        // Spawn the player at the center of the screen offset a bit upwards.
         bird = new PlayerBird(0,(windowSize.y * -0.2) / camera.getZoomY());
-
         addObject(bird);
 
+        // The position of the ground objects is dependent on the camera so we must update the camera after spawning the player.
         updateCamera(camera);
 
         addGroundObjects();
-
     }
 
     // Add the ground objects to the bottom of the game window. Add enough ground to cover the whole window.
@@ -104,7 +107,7 @@ public class FlappyJava extends Canvas {
         camera.setX(bird.x + bird.size.x * 0.5);
     }
 
-    // Update an array of objects so that they seamlessly loop across the screen.
+    // Update an array of objects so that they seamlessly loop across the screen using "objectTileWidth" as the repeating amount.
     private void updateArrayOfBackgroundObjectsToRepeatHorizontally(ArrayList<GameObject> objects, int objectTileWidth){
 
         // The left of the screen position rounded to the floor of the background tile's object width.
@@ -115,6 +118,18 @@ public class FlappyJava extends Canvas {
 
             object.x = originX + i * objectTileWidth;
         }
+    }
+
+    // Spawn pipes in front of the player if there are none ahead.
+    private void spawnPipesInFrontOfPlayer(GameObject player, ArrayList<GameObject> pipes, int pipeDistance){
+
+        // Get the global position for the right-hand side of the screen.
+        double rightEdgeOfScreen = camera.getX() + windowSize.x / camera.getZoomX();
+
+        // Get the next pipe position by finding the next multiple of the pipeDistance from rightEdgeOfScreen
+        double nextPipePosition = Math.ceil(rightEdgeOfScreen / pipeDistance) * pipeDistance;
+
+        System.out.println(nextPipePosition);
     }
     
     private void addObject(GameObject object){ objects.add(object); } 
@@ -153,7 +168,11 @@ public class FlappyJava extends Canvas {
         }
 
         updateCamera(camera);
+
+        // Ensure the ground repeats endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
+
+        spawnPipesInFrontOfPlayer(bird, pipeObjects, pipeDistance);
     }
 
     public void paint(Graphics g){
