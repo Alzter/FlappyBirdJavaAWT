@@ -8,6 +8,8 @@ import java.io.File;          // Input/Output handling classes
 import java.io.IOException;   // Input/Output handling classes
 import javax.imageio.ImageIO; // Image loader class
 import java.util.ArrayList;   // Flexible size arrays
+import java.util.Collections; // Array sorting methods
+import java.util.Comparator;
 
 public class FlappyJava extends Canvas {
 
@@ -233,9 +235,22 @@ public class FlappyJava extends Canvas {
     public void paint(Graphics g){
         super.paint(g);
 
+        // Sort all game objects by Z index before rendering them.
+        Collections.sort(objects, new SortByZIndex());
+
+
         // Draw all game objects.
         for (GameObject object : objects){
             object.paint(g, this, camera);
+        }
+    }
+
+    // Class which exists to compare two game objects by their Z indexes.
+    private class SortByZIndex implements Comparator<GameObject>{
+
+        // Methods which compares two game objects by their Z indexes.
+        public int compare(GameObject a, GameObject b){
+            return (int)Math.signum(a.zIndex - b.zIndex);
         }
     }
 }
