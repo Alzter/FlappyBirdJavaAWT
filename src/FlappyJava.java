@@ -36,6 +36,8 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> groundObjects;
     private ArrayList<GameObject> pipeObjects;
     private PlayerBird bird;
+
+    public int score = 0;
     
     // CONSTRUCTOR
     public FlappyJava(String windowName, int width, int height){
@@ -165,6 +167,11 @@ public class FlappyJava extends Canvas {
         addObject(pipeBottom);
         pipes.add(pipeTop);
         addObject(pipeTop);
+
+        // Add a "point" object which gives the player a point for clearing the pipe.
+        ScorePoint point = new ScorePoint(nextPipePosition + Pipe.size.x, roofYPosition);
+        pipes.add(point);
+        addObject(point);
     }
 
     // Delete pipes which are behind the player to free memory.
@@ -218,6 +225,11 @@ public class FlappyJava extends Canvas {
         for (GameObject object : objects){
             object.process(delta, inputs, objects);
         }
+
+        // If the bird has just collided with a ScorePoint object, increment the score value.
+        if (bird.getIsCollidingWithPoint()){ score++; }
+
+        System.out.println(score);
 
         // Constrain the bird's y position within the ceiling and floor
         bird.y = Math.max(bird.y, roofYPosition);

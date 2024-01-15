@@ -20,6 +20,10 @@ public class PlayerBird extends GameObject{
     private static final String birdSprite = "images/bird.png";
     public static final Point size = new Point(17,12);
 
+    private boolean wasCollidingWithPointLastFrame = false; // True if the bird was intersecting a ScorePoint last frame.
+    private boolean isCollidingWithPoint = false; // True if the bird is intersecting a ScorePoint.
+    private boolean isJustCollidingWithPoint = false; // Only becomes true on the first frame that the bird collides with the point.
+
     public PlayerBird(double x, double y){
         super(x,y,size.x,size.y,birdSprite);
 
@@ -33,6 +37,7 @@ public class PlayerBird extends GameObject{
             case ALIVE:
                 handlePlayerInput(inputs);
                 checkCollisions(objects);
+                checkScorePoints(objects);
                 break;
             case DEAD:
                 break;
@@ -41,18 +46,41 @@ public class PlayerBird extends GameObject{
         applyGravity(delta);
         applyVelocity(delta);
 
+        isJustCollidingWithPoint = isCollidingWithPoint && !wasCollidingWithPointLastFrame;
+        wasCollidingWithPointLastFrame = isCollidingWithPoint;
+
     }
 
     public void checkCollisions(ArrayList<GameObject> objects){
         
         for (GameObject o : objects){
             if (o != this){
-                if (o.intersects(this)){
-                    die();
-                    return;
+                if (o instanceof Pipe || o instanceof Ground){
+                    if (o.intersects(this)){
+                        die();
+                        return;
+                    }
                 }
             }
         }
+    }
+
+    public void checkScorePoints(ArrayList<GameObject> objects){
+        isCollidingWithPoint = false;
+        for (GameObject o : objects){
+            if (o != this){
+                if (o instanceof ScorePoint){
+                    if (o.intersects(this)){
+                        isCollidingWithPoint = true;
+                    }
+                }
+            }
+        }
+    }
+
+    // Returns true iff the bird has collided with a new ScorePoint object this frame.
+    public boolean getIsCollidingWithPoint(){
+        return isJustCollidingWithPoint;
     }
 
     private void die(){
