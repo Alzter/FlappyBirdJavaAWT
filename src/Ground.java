@@ -6,6 +6,6 @@ public class Ground extends GameObject{
     public static final Point size = new Point(168,56);
 
     public Ground(double x, double y){
-        super(x,y,size.x,size.y,sprite,1);
+        super(x,y,size.x,size.y,sprite,2);
     }
 }

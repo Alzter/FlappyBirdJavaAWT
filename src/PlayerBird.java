@@ -25,7 +25,7 @@ public class PlayerBird extends GameObject{
     private boolean isJustCollidingWithPoint = false; // Only becomes true on the first frame that the bird collides with the point.
 
     public PlayerBird(double x, double y){
-        super(x,y,size.x,size.y,birdSprite);
+        super(x,y,size.x,size.y,birdSprite,1);
 
         velocity = new Point2D.Double(movementSpeed,0f);
         state = PlayerState.ALIVE;
