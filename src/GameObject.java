@@ -10,6 +10,7 @@ public class GameObject extends Rectangle2D.Double{
 
     private Image sprite;
     private Point spriteSize;
+    public int zIndex = 0; // Sprites are sorted by Z indexes when rendering. Sprites with higher Z indexes render above ones with lower ones.
 
     // Overwritable physics process function.
     public void process(double delta, GameInput inputs){
@@ -29,6 +30,14 @@ public class GameObject extends Rectangle2D.Double{
         
         spriteSize = new Point(sprite.getWidth(null), sprite.getHeight(null));
     }
+
+    // Create a GameObject with a sprite and a custom Z Index.
+    public GameObject(double x, double y, double width, double height, String spriteFilePath, int zIndex){
+        this(x,y,width,height,spriteFilePath);
+
+        this.zIndex = zIndex;
+    }
+
 
     // Sprite draw method.
     public void paint(Graphics g, Canvas c, Camera camera){
