@@ -12,7 +12,7 @@ import java.util.ArrayList;   // Flexible size arrays
 public class FlappyJava extends Canvas {
 
     private static final Point windowSize = new Point(400,400);   // How big should the game window be?
-    private static final int gameZoom = 2;                            // How zoomed in should the game be?
+    private static final int gameZoom = 1;                            // How zoomed in should the game be?
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 

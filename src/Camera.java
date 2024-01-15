@@ -13,11 +13,11 @@ public class Camera{
     }
 
     public double getX(){
-        return this.position.x - windowSize.x * 0.25;
+        return this.position.x - windowSize.x * 0.5 / zoom.x;
     }
 
     public double getY(){
-        return this.position.y - windowSize.y * 0.25;
+        return this.position.y - windowSize.y * 0.5 / zoom.y;
     }
 
     public void setX(double x){ this.position.x = x; }
