@@ -10,11 +10,11 @@ public class PlayerBird extends GameObject{
 
     private PlayerState state;
     private Point2D.Double velocity;
-    private final static float gravity = 0.3f;
+    private final static float gravity = 0.15f;
 
     
-    private final static float jumpVelocity = -5f; // How much velocity is granted when jumping.
-    private final static float movementSpeed = 2f; // How much the bird moves to the right every frame.
+    private final static float jumpVelocity = -2.5f; // How much velocity is granted when jumping.
+    private final static float movementSpeed = 1f; // How much the bird moves to the right every frame.
 
     private static final String birdSprite = "images/bird.png";
     public static final Point size = new Point(17,12);
