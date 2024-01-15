@@ -4,12 +4,7 @@ import java.util.ArrayList;   // Flexible size arrays
 
 public class PlayerBird extends GameObject{
 
-    public enum PlayerState {
-        ALIVE,
-        DEAD
-    }
-
-    private PlayerState state;
+    public PlayerState state;
     private Point2D.Double velocity;
     private final static float gravity = 0.15f;
 
@@ -28,12 +23,14 @@ public class PlayerBird extends GameObject{
         super(x,y,size.x,size.y,birdSprite,1);
 
         velocity = new Point2D.Double(movementSpeed,0f);
-        state = PlayerState.ALIVE;
+        state = PlayerState.IDLE;
     }
 
     public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
 
         switch (state){
+            case IDLE:
+                handlePlayerInput(inputs);
             case ALIVE:
                 handlePlayerInput(inputs);
                 checkCollisions(objects);
@@ -43,7 +40,10 @@ public class PlayerBird extends GameObject{
                 break;
         }
         
-        applyGravity(delta);
+        if (state != PlayerState.IDLE){
+            applyGravity(delta);
+        }
+        
         applyVelocity(delta);
 
         isJustCollidingWithPoint = isCollidingWithPoint && !wasCollidingWithPointLastFrame;
@@ -92,6 +92,7 @@ public class PlayerBird extends GameObject{
     private void handlePlayerInput(GameInput inputs){
         if (inputs.getMouseJustPressed()){
             velocity.y = jumpVelocity;
+            if (state == PlayerState.IDLE){ state = PlayerState.ALIVE; }
         }
     }
 

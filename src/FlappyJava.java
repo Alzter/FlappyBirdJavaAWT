@@ -86,7 +86,7 @@ public class FlappyJava extends Canvas {
 
     public void initialiseGame(){
         // Spawn the player at the center of the screen offset a bit upwards.
-        bird = new PlayerBird(0,(windowSize.y * -0.2) / camera.getZoomY());
+        bird = new PlayerBird(0,(windowSize.y * -0.1) / camera.getZoomY());
         addObject(bird);
 
         // The position of the ground objects is dependent on the camera so we must update the camera after spawning the player.
@@ -243,7 +243,10 @@ public class FlappyJava extends Canvas {
         // Ensure the ground repeats endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
 
-        spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
+        if (bird.state == PlayerState.ALIVE){
+            spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
+        }
+        
         deletePipesBehindPlayer(pipeObjects);
     }
 
