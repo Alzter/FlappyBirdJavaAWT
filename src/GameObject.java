@@ -12,6 +12,7 @@ public class GameObject extends Rectangle2D.Double{
     private Image sprite;
     private Point spriteSize;
     public int zIndex = 0; // Sprites are sorted by Z indexes when rendering. Sprites with higher Z indexes render above ones with lower ones.
+    public Point2D.Double scrollSpeed = new Point2D.Double(1,1); // Controls how quickly the sprite should move when the camera moves.
 
     // Overwritable physics process function.
     public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
@@ -39,6 +40,14 @@ public class GameObject extends Rectangle2D.Double{
         this.zIndex = zIndex;
     }
 
+    // Create a GameObject with a sprite, custom Z Index, and custom Scroll Speed.
+    public GameObject(double x, double y, double width, double height, String spriteFilePath, int zIndex, double scrollSpeedX, double scrollSpeedY){
+        this(x,y,width,height,spriteFilePath, zIndex);
+
+        scrollSpeed.x = scrollSpeedX;
+        scrollSpeed.y = scrollSpeedY;
+    }
+
 
     // Sprite draw method.
     public void paint(Graphics g, Canvas c, Camera camera){
@@ -47,7 +56,7 @@ public class GameObject extends Rectangle2D.Double{
         if (sprite != null){
 
             // Get the position the object should render on the screen based on the camera's position and zoom level.
-            Point2D.Double screenPosition = new Point2D.Double((x - camera.getX()) * camera.getZoomX(), (y - camera.getY()) * camera.getZoomY());
+            Point2D.Double screenPosition = new Point2D.Double((x - camera.getX()) * (camera.getZoomX() * scrollSpeed.x), (y - camera.getY()) * (camera.getZoomY() * scrollSpeed.y));
             
             // Set "spriteSize" to how big we want the sprite to be in pixels.
             Point2D.Double spriteCameraSize = new Point2D.Double(spriteSize.x * camera.getZoomX(), spriteSize.y * camera.getZoomY());

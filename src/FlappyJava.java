@@ -159,7 +159,7 @@ public class FlappyJava extends Canvas {
 
             GameObject object = objects.get(i);
 
-            object.x = originX + i * objectTileWidth;
+            object.x = originX + i * objectTileWidth * object.scrollSpeed.x;
         }
     }
 
