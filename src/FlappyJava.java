@@ -16,7 +16,7 @@ public class FlappyJava extends Canvas {
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
-    private static final int pipeXDistance = 26 + 100;                // How far apart should each pipe obstacle be in pixels?
+    private static final int pipeXDistance = 26 + 60;                 // How far apart should each pipe obstacle be in pixels?
     private static final int pipeYGap = 64;                           // How big should the gap in-between the pipes be in pixels?
 
     private double roofYPosition;                                     // What is the global y position of the (invisible) ceiling?
