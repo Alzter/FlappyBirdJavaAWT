@@ -219,6 +219,9 @@ public class FlappyJava extends Canvas {
             object.process(delta, inputs);
         }
 
+        bird.checkCollisions(pipeObjects);
+        bird.checkCollisions(groundObjects);
+
         // Constrain the bird's y position within the ceiling and floor
         bird.y = Math.max(bird.y, roofYPosition);
         bird.y = Math.min(bird.y, groundYPosition - bird.height);
@@ -237,7 +240,6 @@ public class FlappyJava extends Canvas {
 
         // Sort all game objects by Z index before rendering them.
         Collections.sort(objects, new SortByZIndex());
-
 
         // Draw all game objects.
         for (GameObject object : objects){
