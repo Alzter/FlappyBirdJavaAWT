@@ -11,8 +11,8 @@ import java.util.ArrayList;   // Flexible size arrays
 
 public class FlappyJava extends Canvas {
 
-    private static final Point windowSize = new Point(400,400);   // How big should the game window be?
-    private static final int gameZoom = 1;                            // How zoomed in should the game be?
+    private static final Point windowSize = new Point(400,600);   // How big should the game window be?
+    private static final int gameZoom = 2;                            // How zoomed in should the game be?
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
@@ -21,12 +21,6 @@ public class FlappyJava extends Canvas {
     private JFrame window;
     private Camera camera;
     private GameInput inputs;
-
-    private static final float cameraPlayerHorizontalPosition = 0.25f;
-    // How much percent of the game window should be dedicated to showing what is ahead of the player?
-    // 0   = Player is on the right-hand side of the screen
-    // 0.5 = Player is in the middle of the screen
-    // 1   = Player is on the left-hand side of the screen
     
     private ArrayList<GameObject> objects;
     private ArrayList<Ground> groundObjects;
@@ -72,10 +66,12 @@ public class FlappyJava extends Canvas {
     }
 
     public void initialiseGame(){
-        // Spawn the bird at the center of the screen.
-        bird = new PlayerBird(0d,0d);
+        // Spawn the bird at the top of the screen.
+        bird = new PlayerBird(0,(windowSize.y * -0.2) / camera.getZoomY());
 
         addObject(bird);
+
+        updateCamera(camera);
 
         addGroundObjects();
 
@@ -101,6 +97,11 @@ public class FlappyJava extends Canvas {
             groundObjects.add(ground);
             addObject(ground);
         }
+    }
+
+    private void updateCamera(Camera c){
+        // Ensure the bird is at the horizontal center of the window
+        camera.setX(bird.x + bird.size.x * 0.5);
     }
 
     // Move the ground objects so that they always are in the camera.
@@ -143,11 +144,10 @@ public class FlappyJava extends Canvas {
 
         // Make all game objects process.
         for (GameObject object : objects){
-            //object.process(delta, inputs);
+            object.process(delta, inputs);
         }
 
-        // Ensure the bird is at the horizontal center of the window
-        camera.setX(bird.x);
+        updateCamera(camera);
     }
 
     public void paint(Graphics g){

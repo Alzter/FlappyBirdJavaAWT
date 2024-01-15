@@ -17,10 +17,10 @@ public class PlayerBird extends GameObject{
     private final static float movementSpeed = 2f; // How much the bird moves to the right every frame.
 
     private static final String birdSprite = "images/bird.png";
-    private static final Point birdSize = new Point(17,12);
+    public static final Point size = new Point(17,12);
 
     public PlayerBird(double x, double y){
-        super(x,y,birdSize.x,birdSize.y,birdSprite);
+        super(x,y,size.x,size.y,birdSprite);
 
         velocity = new Point2D.Double(movementSpeed,0f);
         state = PlayerState.ALIVE;
