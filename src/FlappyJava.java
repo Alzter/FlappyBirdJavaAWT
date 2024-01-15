@@ -16,7 +16,10 @@ public class FlappyJava extends Canvas {
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
-    private static final int pipeDistance = 200;                      // How far apart should each pipe obstacle be in pixels?
+    private static final int pipeDistance = 26;                      // How far apart should each pipe obstacle be in pixels?
+
+    private double roofYPosition;                                    // What is the global y position of the (invisible) ceiling?
+    private double groundYPosition;                                  // What is the global y position of the ground?
 
     private long previousFrameTime;                                   // How many milliseconds did the previous frame take?
     private long delta;                                               // previousFrameTime / targetFrameTime
@@ -77,6 +80,7 @@ public class FlappyJava extends Canvas {
         // The position of the ground objects is dependent on the camera so we must update the camera after spawning the player.
         updateCamera(camera);
 
+        roofYPosition = camera.getY();
         addGroundObjects();
     }
 
@@ -88,7 +92,7 @@ public class FlappyJava extends Canvas {
         // Where is the left-hand edge of the window in global co-ordinates?
         double groundXOrigin = camera.getX();
         // Where is the bottom-hand edge of the window in global co-ordinates?
-        double groundYPosition = (camera.getY() + windowSize.y / camera.getZoomY()) - Ground.size.y;
+        groundYPosition = (camera.getY() + windowSize.y / camera.getZoomY()) - Ground.size.y;
 
         for(int i = 0; i < groundObjectsNeeded; i++){
 
@@ -136,8 +140,11 @@ public class FlappyJava extends Canvas {
             }
         }
 
+        // Random chance whether the pipe spawns at the top or bottom of the screen.
+        boolean spawnOnTop = (Math.random() < 0.5);
+
         // If no pipes exist at the desired pipe position, spawn a new one.
-        Pipe pipe = new Pipe(nextPipePosition, 0, true);
+        Pipe pipe = new Pipe(nextPipePosition, 0, spawnOnTop);
 
         pipes.add(pipe);
         addObject(pipe);
@@ -194,6 +201,8 @@ public class FlappyJava extends Canvas {
         for (GameObject object : objects){
             object.process(delta, inputs);
         }
+
+        bird.y = roofYPosition;
 
         updateCamera(camera);
 
