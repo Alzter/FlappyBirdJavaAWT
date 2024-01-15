@@ -72,8 +72,8 @@ public class FlappyJava extends Canvas {
     }
 
     public void initialiseGame(){
-        // Spawn the bird at the vertical center of the screen.
-        bird = new PlayerBird(0d,windowSize.y * 0.5 / camera.getZoomY());
+        // Spawn the bird at the center of the screen.
+        bird = new PlayerBird(0d,0d);
 
         addObject(bird);
 
@@ -86,12 +86,14 @@ public class FlappyJava extends Canvas {
         // How many ground objects do we need to fill the screen?
         int groundObjectsNeeded = (int)Math.ceil((windowSize.x / camera.getZoomX()) / Ground.size.x) + 1;
 
-        // What Y position should the ground be placed at to be at the bottom of the window?
-        double groundYPosition = (windowSize.y / camera.getZoomY()) - Ground.size.y;
+        // Where is the left-hand edge of the window in global co-ordinates?
+        double groundXOrigin = camera.getX();
+        // Where is the bottom-hand edge of the window in global co-ordinates?
+        double groundYPosition = (camera.getY() + windowSize.y / camera.getZoomY()) - Ground.size.y;
 
         for(int i = 0; i < groundObjectsNeeded; i++){
 
-            double groundXPosition = Ground.size.x * i;
+            double groundXPosition = groundXOrigin + Ground.size.x * i;
 
             // Add a ground object at the bottom of the window.
             Ground ground = new Ground(groundXPosition, groundYPosition);
@@ -141,7 +143,7 @@ public class FlappyJava extends Canvas {
 
         // Make all game objects process.
         for (GameObject object : objects){
-            object.process(delta, inputs);
+            //object.process(delta, inputs);
         }
 
         // Ensure the bird is at the horizontal center of the window
