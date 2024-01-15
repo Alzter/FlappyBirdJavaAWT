@@ -22,7 +22,7 @@ public class FlappyJava extends Canvas {
 
     private static final int pipeXDistance = 26 + 70;                 // How far apart should each pipe obstacle be in pixels?
     private static final int pipeYGap = 46;                           // How big should the gap in-between the pipes be in pixels?
-    private static final float pipeYVariation = 0.75f;                // How much should pipes vary on the Y axis? (1 = from top of screen to bottom, 0 = always in center of screen)
+    private static final float pipeYVariation = 0.6f;                 // How much should pipes vary on the Y axis? (1 = from top of screen to bottom, 0 = always in center of screen)
 
     private double roofYPosition;                                     // What is the global y position of the (invisible) ceiling?
     private double groundYPosition;                                   // What is the global y position of the ground?
@@ -40,7 +40,7 @@ public class FlappyJava extends Canvas {
 
     private ScoreDisplay scoreDisplay;
 
-    public int score = 0;
+    public int score;
     
     // CONSTRUCTOR
     public FlappyJava(String windowName, int width, int height){
@@ -85,6 +85,8 @@ public class FlappyJava extends Canvas {
     }
 
     public void initialiseGame(){
+        score = 0;
+
         // Spawn the player at the center of the screen offset a bit upwards.
         bird = new PlayerBird(0,(windowSize.y * -0.1) / camera.getZoomY());
         addObject(bird);
@@ -94,6 +96,14 @@ public class FlappyJava extends Canvas {
 
         roofYPosition = camera.getY();
         addGroundObjects();
+    }
+
+    public void restartGame(){
+        objects = new ArrayList<GameObject>();
+        groundObjects = new ArrayList<GameObject>();
+        pipeObjects = new ArrayList<GameObject>();
+
+        initialiseGame();
     }
 
     // Add the ground objects to the bottom of the game window. Add enough ground to cover the whole window.
@@ -243,11 +253,27 @@ public class FlappyJava extends Canvas {
         // Ensure the ground repeats endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
 
-        if (bird.state == PlayerState.ALIVE){
-            spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
-        }
         
         deletePipesBehindPlayer(pipeObjects);
+
+        switch (bird.state){
+            case ALIVE:
+
+                // If player is alive, spawn pipes in front of them.
+                spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
+                break;
+
+            case DEAD:
+
+                // If the player dies and we click, restart the game.
+                if (inputs.getMouseJustPressed()){
+                    restartGame();
+                }
+                break;
+            
+            case IDLE:
+                break;
+        }
     }
 
     public void paint(Graphics g){
@@ -262,8 +288,10 @@ public class FlappyJava extends Canvas {
         }
 
         // Draw the score display.
-        scoreDisplay.setScore(score);
-        scoreDisplay.paint(g, this, camera, windowSize);
+        if (bird.state != PlayerState.IDLE){
+            scoreDisplay.setScore(score);
+            scoreDisplay.paint(g, this, camera, windowSize);
+        }
     }
 
     // Class which exists to compare two game objects by their Z indexes.
