@@ -1,5 +1,6 @@
 import javax.swing.*;         // Window (JFrame) class
 import java.awt.*;            // Drawing and graphics classes
+import java.lang.Math;
 
 import java.awt.event.*;      // Input handling classes
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;   // Flexible size arrays
 public class FlappyJava extends Canvas {
 
     private static final Point windowSize = new Point(400,400);   // How big should the game window be?
-    private static final int gameZoom = 1;                            // How zoomed in should the game be?
+    private static final int gameZoom = 2;                            // How zoomed in should the game be?
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
@@ -28,14 +29,14 @@ public class FlappyJava extends Canvas {
     // 1   = Player is on the left-hand side of the screen
     
     private ArrayList<GameObject> objects;
-    private ArrayList<GameObject> ground;
+    private ArrayList<Ground> groundObjects;
     private PlayerBird bird;
     
     // CONSTRUCTOR
     public FlappyJava(String windowName, int width, int height){
         
         inputs = new GameInput();
-        camera = new Camera(0,0,gameZoom,gameZoom);
+        camera = new Camera(0,0,gameZoom,gameZoom,width,height);
 
         setSize(width,height);
 
@@ -46,6 +47,7 @@ public class FlappyJava extends Canvas {
         window.setVisible(true);
 
         objects = new ArrayList<GameObject>();
+        groundObjects = new ArrayList<Ground>();
 
         // Mouse click event handling code:
         addMouseListener(new MouseAdapter() { 
@@ -71,13 +73,40 @@ public class FlappyJava extends Canvas {
 
     public void initialiseGame(){
         // Spawn the bird at the vertical center of the screen.
-        bird = new PlayerBird(0d,windowSize.y * 0.5 / camera.zoom.y);
+        bird = new PlayerBird(0d,windowSize.y * 0.5 / camera.getZoomY());
 
         addObject(bird);
 
-        // Add a ground object at the bottom of the window.
-        GameObject ground = new Ground(0, (windowSize.y / camera.zoom.y) - Ground.size.y);
-        addObject(ground);
+        addGroundObjects();
+
+    }
+
+    // Add the ground objects to the bottom of the game window. Add enough ground to cover the whole window.
+    private void addGroundObjects(){
+        // How many ground objects do we need to fill the screen?
+        int groundObjectsNeeded = (int)Math.ceil((windowSize.x / camera.getZoomX()) / Ground.size.x) + 1;
+
+        // What Y position should the ground be placed at to be at the bottom of the window?
+        double groundYPosition = (windowSize.y / camera.getZoomY()) - Ground.size.y;
+
+        for(int i = 0; i < groundObjectsNeeded; i++){
+
+            double groundXPosition = Ground.size.x * i;
+
+            // Add a ground object at the bottom of the window.
+            Ground ground = new Ground(groundXPosition, groundYPosition);
+
+            groundObjects.add(ground);
+            addObject(ground);
+        }
+    }
+
+    // Move the ground objects so that they always are in the camera.
+    private void updateGroundObjects(){
+
+        for (Ground ground : groundObjects){
+
+        }
     }
     
     private void addObject(GameObject object){ objects.add(object); } 
@@ -116,7 +145,7 @@ public class FlappyJava extends Canvas {
         }
 
         // Ensure the bird is at the horizontal center of the window
-        camera.x = (bird.x * camera.zoom.x - windowSize.x * cameraPlayerHorizontalPosition) / camera.zoom.x;
+        camera.setX(bird.x);
     }
 
     public void paint(Graphics g){
