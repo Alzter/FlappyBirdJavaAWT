@@ -16,10 +16,11 @@ public class FlappyJava extends Canvas {
     private static final int fps = 60;                                // Target FPS of game
     private static final long targetFrameTime = (1000)/fps;           // How many milliseconds should it take for a frame to elapse?
 
-    private static final int pipeDistance = 26;                      // How far apart should each pipe obstacle be in pixels?
+    private static final int pipeXDistance = 26 + 200;                // How far apart should each pipe obstacle be in pixels?
+    private static final int pipeYGap = 64;                           // How big should the gap in-between the pipes be in pixels?
 
-    private double roofYPosition;                                    // What is the global y position of the (invisible) ceiling?
-    private double groundYPosition;                                  // What is the global y position of the ground?
+    private double roofYPosition;                                     // What is the global y position of the (invisible) ceiling?
+    private double groundYPosition;                                   // What is the global y position of the ground?
 
     private long previousFrameTime;                                   // How many milliseconds did the previous frame take?
     private long delta;                                               // previousFrameTime / targetFrameTime
@@ -125,13 +126,13 @@ public class FlappyJava extends Canvas {
     }
 
     // Spawn pipes in front of the player if there are none ahead.
-    private void spawnPipesInFrontOfPlayer(ArrayList<GameObject> pipes, int pipeDistance){
+    private void spawnPipesInFrontOfPlayer(ArrayList<GameObject> pipes, int pipeXDistance){
 
         // Get the global position for the right-hand side of the screen.
         double rightEdgeOfScreen = camera.getX() + windowSize.x / camera.getZoomX();
 
-        // Get the next pipe position by finding the next multiple of the pipeDistance from rightEdgeOfScreen
-        double nextPipePosition = Math.ceil(rightEdgeOfScreen / pipeDistance) * pipeDistance;
+        // Get the next pipe position by finding the next multiple of the pipeXDistance from rightEdgeOfScreen
+        double nextPipePosition = Math.ceil(rightEdgeOfScreen / pipeXDistance) * pipeXDistance;
 
         // Check if any pipe objects already exist at the next pipe position.
         for (GameObject pipe : pipes){
@@ -140,14 +141,26 @@ public class FlappyJava extends Canvas {
             }
         }
 
-        // Random chance whether the pipe spawns at the top or bottom of the screen.
-        boolean spawnOnTop = (Math.random() < 0.5);
+        // Get the y position for the vertical center of the game (between the ceiling and the roof)
+        double YCenter = (roofYPosition + groundYPosition) * 0.5;
 
-        // If no pipes exist at the desired pipe position, spawn a new one.
-        Pipe pipe = new Pipe(nextPipePosition, 0, spawnOnTop);
+        // Get the y position for the distance from the center of the screen to the roof/floor
+        double YOffset = Math.abs(groundYPosition - roofYPosition) - pipeYGap;
 
-        pipes.add(pipe);
-        addObject(pipe);
+        // Halve it
+        YOffset *= 0.5;
+
+        // Set the pipe Y position to the center y plus the offset y multiplied by a random float from -0.5 to 0.5
+        double pipeYPosition = YCenter + YOffset * (Math.random() - 0.5);
+
+        // Spawn the top and bottom pipes.
+        Pipe pipeTop = new Pipe(nextPipePosition, pipeYPosition - pipeYGap * 0.5, true);
+        Pipe pipeBottom = new Pipe(nextPipePosition, pipeYPosition + pipeYGap * 0.5, false);
+
+        pipes.add(pipeBottom);
+        addObject(pipeBottom);
+        pipes.add(pipeTop);
+        addObject(pipeTop);
     }
 
     // Delete pipes which are behind the player to free memory.
@@ -202,14 +215,12 @@ public class FlappyJava extends Canvas {
             object.process(delta, inputs);
         }
 
-        bird.y = roofYPosition;
-
         updateCamera(camera);
 
         // Ensure the ground repeats endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
 
-        spawnPipesInFrontOfPlayer(pipeObjects, pipeDistance);
+        spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
         deletePipesBehindPlayer(pipeObjects);
     }
 
