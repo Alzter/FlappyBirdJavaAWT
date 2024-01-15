@@ -20,8 +20,9 @@ public class FlappyJava extends Canvas {
     private static final long frameTime = (1000)/fps;                 // How many milliseconds will it take for a frame to elapse?
     private static final long targetFrameTime = (1000)/targetFps;     // How many milliseconds should it take for a frame to elapse?
 
-    private static final int pipeXDistance = 26 + 60;                 // How far apart should each pipe obstacle be in pixels?
-    private static final int pipeYGap = 64;                           // How big should the gap in-between the pipes be in pixels?
+    private static final int pipeXDistance = 26 + 70;                 // How far apart should each pipe obstacle be in pixels?
+    private static final int pipeYGap = 46;                           // How big should the gap in-between the pipes be in pixels?
+    private static final float pipeYVariation = 0.75f;                // How much should pipes vary on the Y axis? (1 = from top of screen to bottom, 0 = always in center of screen)
 
     private double roofYPosition;                                     // What is the global y position of the (invisible) ceiling?
     private double groundYPosition;                                   // What is the global y position of the ground?
@@ -157,8 +158,8 @@ public class FlappyJava extends Canvas {
         // Get the y position for the distance from the center of the screen to the roof/floor
         double YOffset = Math.abs(groundYPosition - roofYPosition) - pipeYGap;
 
-        // Halve it
-        YOffset *= 0.5;
+        // Reduce it
+        YOffset *= pipeYVariation;
 
         // Set the pipe Y position to the center y plus the offset y multiplied by a random float from -0.5 to 0.5
         double pipeYPosition = YCenter + YOffset * (Math.random() - 0.5);
