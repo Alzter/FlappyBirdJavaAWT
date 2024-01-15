@@ -23,7 +23,7 @@ public class FlappyJava extends Canvas {
     private GameInput inputs;
     
     private ArrayList<GameObject> objects;
-    private ArrayList<Ground> groundObjects;
+    private ArrayList<GameObject> groundObjects;
     private PlayerBird bird;
     
     // CONSTRUCTOR
@@ -41,7 +41,7 @@ public class FlappyJava extends Canvas {
         window.setVisible(true);
 
         objects = new ArrayList<GameObject>();
-        groundObjects = new ArrayList<Ground>();
+        groundObjects = new ArrayList<GameObject>();
 
         // Mouse click event handling code:
         addMouseListener(new MouseAdapter() { 
@@ -104,11 +104,16 @@ public class FlappyJava extends Canvas {
         camera.setX(bird.x + bird.size.x * 0.5);
     }
 
-    // Move the ground objects so that they always are in the camera.
-    private void updateGroundObjects(){
+    // Update an array of objects so that they seamlessly loop across the screen.
+    private void updateArrayOfBackgroundObjectsToRepeatHorizontally(ArrayList<GameObject> objects, int objectTileWidth){
 
-        for (Ground ground : groundObjects){
+        // The left of the screen position rounded to the floor of the background tile's object width.
+        double originX = Math.floor(camera.getX() / objectTileWidth) * objectTileWidth;
+        for (int i=0; i<objects.size(); i++){
 
+            GameObject object = objects.get(i);
+
+            object.x = originX + i * objectTileWidth;
         }
     }
     
@@ -148,6 +153,7 @@ public class FlappyJava extends Canvas {
         }
 
         updateCamera(camera);
+        updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
     }
 
     public void paint(Graphics g){
