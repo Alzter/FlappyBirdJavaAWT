@@ -13,8 +13,8 @@ import java.util.Comparator;
 
 public class FlappyJava extends Canvas {
 
-    private static final Point windowSize = new Point(400,600);   // How big should the game window be?
-    private static final int gameZoom = 2;                            // How zoomed in should the game be?
+    private static final Point windowSize = new Point(600,800);   // How big should the game window be?
+    private static final int gameZoom = 3;                            // How zoomed in should the game be?
     private static final int fps = 60;                                // FPS that the game shall run at.
     private static final int targetFps = 60;                          // Target FPS of game (DO NOT CHANGE)
     private static final long frameTime = (1000)/fps;                 // How many milliseconds will it take for a frame to elapse?
