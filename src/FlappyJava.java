@@ -41,6 +41,9 @@ public class FlappyJava extends Canvas {
 
     private ScoreDisplay scoreDisplay;
 
+    private SoundPlayer sfx;
+    private static final String scoreSound = "sounds/point.wav";
+
     public int score;
     
     // CONSTRUCTOR
@@ -63,6 +66,7 @@ public class FlappyJava extends Canvas {
         backgroundObjects = new ArrayList<GameObject>();
 
         scoreDisplay = new ScoreDisplay();
+        sfx = new SoundPlayer();
 
         // Mouse click event handling code:
         addMouseListener(new MouseAdapter() { 
@@ -261,7 +265,10 @@ public class FlappyJava extends Canvas {
         }
 
         // If the bird has just collided with a ScorePoint object, increment the score value.
-        if (bird.getIsCollidingWithPoint()){ score++; }
+        if (bird.getIsCollidingWithPoint()){
+            score++;
+            sfx.playSound(scoreSound);
+        }
 
         // Constrain the bird's y position within the ceiling and floor
         bird.y = Math.max(bird.y, roofYPosition);

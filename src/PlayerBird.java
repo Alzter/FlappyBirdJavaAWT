@@ -14,6 +14,11 @@ public class PlayerBird extends GameObject{
 
     private static final String birdSprite = "images/bird.png";
     public static final Point size = new Point(17,12);
+    
+    private SoundPlayer sfx;
+    private static final String jumpSound = "sounds/wing.wav";
+    private static final String dieSound = "sounds/hit.wav";
+    private static final String fallSound = "sounds/die.wav";
 
     private boolean wasCollidingWithPointLastFrame = false; // True if the bird was intersecting a ScorePoint last frame.
     private boolean isCollidingWithPoint = false; // True if the bird is intersecting a ScorePoint.
@@ -24,6 +29,7 @@ public class PlayerBird extends GameObject{
 
         velocity = new Point2D.Double(movementSpeed,0f);
         state = PlayerState.IDLE;
+        sfx = new SoundPlayer();
     }
 
     public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
@@ -101,6 +107,8 @@ public class PlayerBird extends GameObject{
     }
 
     private void die(){
+        sfx.playSound(dieSound);
+        sfx.playSound(fallSound);
         velocity.x = 0;
         velocity.y = 0;
         state = PlayerState.DEAD;
@@ -108,6 +116,7 @@ public class PlayerBird extends GameObject{
 
     private void handlePlayerInput(GameInput inputs){
         if (inputs.getMouseJustPressed()){
+            sfx.playSound(jumpSound);
             velocity.y = jumpVelocity;
             if (state == PlayerState.IDLE){ state = PlayerState.ALIVE; }
         }
