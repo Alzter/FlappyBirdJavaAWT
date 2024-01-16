@@ -52,17 +52,34 @@ public class PlayerBird extends GameObject{
     }
 
     public void checkCollisions(ArrayList<GameObject> objects){
-        
+        if (checkIsOnGround(objects) || checkIsOnWall(objects)){
+            die();
+        }
+    }
+
+    private boolean checkIsOnGround(ArrayList<GameObject> objects){
+        y += 1;
         for (GameObject o : objects){
-            if (o != this){
-                if (o instanceof Pipe || o instanceof Ground){
-                    if (o.intersects(this)){
-                        die();
-                        return;
-                    }
+            if (o instanceof Ground){
+                if (o.intersects(this)){
+                    y -= 1;
+                    return true;
                 }
             }
         }
+        y -= 1;
+        return false;
+    }
+
+    private boolean checkIsOnWall(ArrayList<GameObject> objects){
+        for (GameObject o : objects){
+            if (o instanceof Pipe){
+                if (o.intersects(this)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void checkScorePoints(ArrayList<GameObject> objects){

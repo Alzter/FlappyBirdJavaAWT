@@ -153,13 +153,15 @@ public class FlappyJava extends Canvas {
     // Update an array of objects so that they seamlessly loop across the screen using "objectTileWidth" as the repeating amount.
     private void updateArrayOfBackgroundObjectsToRepeatHorizontally(ArrayList<GameObject> objects, int objectTileWidth){
 
+
         // The left of the screen position rounded to the floor of the background tile's object width.
-        double originX = Math.floor(camera.getX() / objectTileWidth) * objectTileWidth;
         for (int i=0; i<objects.size(); i++){
 
             GameObject object = objects.get(i);
+            double width = objectTileWidth / object.scrollSpeed.x;
+            double originX = Math.floor(camera.getX() / width) * width;
 
-            object.x = originX + i * objectTileWidth * object.scrollSpeed.x;
+            object.x = originX + i * objectTileWidth / object.scrollSpeed.x;
         }
     }
 
@@ -263,7 +265,7 @@ public class FlappyJava extends Canvas {
 
         // Constrain the bird's y position within the ceiling and floor
         bird.y = Math.max(bird.y, roofYPosition);
-        bird.y = Math.min(bird.y, groundYPosition - bird.height + 1);
+        bird.y = Math.min(bird.y, groundYPosition - bird.height);
 
         updateCamera(camera);
 
