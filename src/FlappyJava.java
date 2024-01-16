@@ -20,6 +20,8 @@ public class FlappyJava extends Canvas {
     private static final long frameTime = (1000)/fps;                 // How many milliseconds will it take for a frame to elapse?
     private static final long targetFrameTime = (1000)/targetFps;     // How many milliseconds should it take for a frame to elapse?
 
+    private static final float cameraLookAhead = 0.5f;                // 0 = Player is at center of screen; 1 = Player is at left-hand side of screen.
+
     private static final int pipeXDistance = 26 + 70;                 // How far apart should each pipe obstacle be in pixels?
     private static final int pipeYGap = 46;                           // How big should the gap in-between the pipes be in pixels?
     private static final float pipeYVariation = 0.6f;                 // How much should pipes vary on the Y axis? (1 = from top of screen to bottom, 0 = always in center of screen)
@@ -60,11 +62,6 @@ public class FlappyJava extends Canvas {
         window.pack();
         window.setVisible(true);
 
-        objects = new ArrayList<GameObject>();
-        groundObjects = new ArrayList<GameObject>();
-        pipeObjects = new ArrayList<GameObject>();
-        backgroundObjects = new ArrayList<GameObject>();
-
         scoreDisplay = new ScoreDisplay();
         sfx = new SoundPlayer();
 
@@ -83,15 +80,15 @@ public class FlappyJava extends Canvas {
     }
 
     public void restartGame(){
-        objects = new ArrayList<GameObject>();
-        groundObjects = new ArrayList<GameObject>();
-        pipeObjects = new ArrayList<GameObject>();
-        backgroundObjects = new ArrayList<GameObject>();
 
         initialiseGame();
     }
 
     public void initialiseGame(){
+        objects = new ArrayList<GameObject>();
+        groundObjects = new ArrayList<GameObject>();
+        pipeObjects = new ArrayList<GameObject>();
+        backgroundObjects = new ArrayList<GameObject>();
         score = 0;
 
         // Spawn the player at the center of the screen offset a bit upwards.
@@ -104,6 +101,7 @@ public class FlappyJava extends Canvas {
         roofYPosition = camera.getY();
         addGroundObjects();
         addBackgroundObjects();
+        process();
     }
 
     // MAIN function
@@ -151,7 +149,7 @@ public class FlappyJava extends Canvas {
 
     private void updateCamera(Camera c){
         // Ensure the bird is at the horizontal center of the window
-        camera.setX(bird.x + bird.size.x * 0.5);
+        camera.setX(bird.x + bird.size.x * 0.5 + (cameraLookAhead * ((windowSize.x - bird.size.x * camera.getZoomX()) * 0.5 / camera.getZoomX())));
     }
 
     // Update an array of objects so that they seamlessly loop across the screen using "objectTileWidth" as the repeating amount.
