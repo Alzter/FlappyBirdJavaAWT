@@ -45,6 +45,7 @@ public class FlappyJava extends Canvas {
 
     private SoundPlayer sfx;
     private static final String scoreSound = "sounds/point.wav";
+    private static final String uiWhooshSound = "sounds/swooshing.wav";
 
     public int score;
     private boolean gameOver = false;
@@ -306,7 +307,7 @@ public class FlappyJava extends Canvas {
 
     // Called a second after the bird dies.
     public void gameOverScreen(){
-        sfx.playSound();
+        sfx.playSound(uiWhooshSound);
     }
 
     public void paint(Graphics g){
