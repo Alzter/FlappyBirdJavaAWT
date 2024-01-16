@@ -13,14 +13,10 @@ public class ScoreDisplay {
     private ArrayList<Image> digitSprites;
     private final static String digitImagePath = "images/digits/";
     private final static int digitWidth = 12;
-    private int score;
 
     public ScoreDisplay(){
         digitSprites = loadDigitSprites();
-        score = 0;
     }
-
-    public void setScore(int score){ this.score = score; }
 
     // Read in all of the number textures from the game and load them each as images.
     private ArrayList<Image> loadDigitSprites(){
@@ -48,7 +44,7 @@ public class ScoreDisplay {
         }
     }
 
-    public void paint(Graphics g, Canvas c, Camera camera, Point windowSize){
+    public void paint(int score, Graphics g, Canvas c, Camera camera, Point windowSize){
 
         ArrayList<Integer> scoreDigits = splitIntegerIntoDigits(score);
 

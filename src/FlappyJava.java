@@ -47,6 +47,7 @@ public class FlappyJava extends Canvas {
     private static final String scoreSound = "sounds/point.wav";
 
     public int score;
+    private boolean gameOver = false;
     
     // CONSTRUCTOR
     public FlappyJava(String windowName, int width, int height){
@@ -90,6 +91,7 @@ public class FlappyJava extends Canvas {
         pipeObjects = new ArrayList<GameObject>();
         backgroundObjects = new ArrayList<GameObject>();
         score = 0;
+        gameOver = false;
 
         // Spawn the player at the center of the screen offset a bit upwards.
         bird = new PlayerBird(0,(windowSize.y * -0.1) / camera.getZoomY());
@@ -290,17 +292,21 @@ public class FlappyJava extends Canvas {
                 spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
                 break;
 
-            case DEAD:
-
-                // If the player dies and we click, restart the game.
-                if (inputs.getMouseJustPressed()){
-                    restartGame();
+            case GAMEOVER:
+                if (!gameOver){
+                    gameOver = true;
+                    gameOverScreen();
                 }
                 break;
             
-            case IDLE:
+            default:
                 break;
         }
+    }
+
+    // Called a second after the bird dies.
+    public void gameOverScreen(){
+        sfx.playSound();
     }
 
     public void paint(Graphics g){
@@ -315,9 +321,8 @@ public class FlappyJava extends Canvas {
         }
 
         // Draw the score display.
-        if (bird.state != PlayerState.IDLE){
-            scoreDisplay.setScore(score);
-            scoreDisplay.paint(g, this, camera, windowSize);
+        if (bird.state != PlayerState.IDLE && bird.state != PlayerState.GAMEOVER){
+            scoreDisplay.paint(score, g, this, camera, windowSize);
         }
     }
 

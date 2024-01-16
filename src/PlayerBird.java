@@ -42,7 +42,7 @@ public class PlayerBird extends GameObject{
                 checkCollisions(objects);
                 checkScorePoints(objects);
                 break;
-            case DEAD:
+            default:
                 break;
         }
         
@@ -107,11 +107,33 @@ public class PlayerBird extends GameObject{
     }
 
     private void die(){
-        sfx.playSound(dieSound);
-        sfx.playSound(fallSound);
         velocity.x = 0;
         velocity.y = 0;
         state = PlayerState.DEAD;
+
+        sfx.playSound(dieSound);
+
+        // Only play the fall sound after 0.5 seconds.
+        new java.util.Timer().schedule(
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    sfx.playSound(fallSound);
+                }
+            }, 
+            500
+        );
+        
+        // After 1 second, switch to the "Game Over" state
+        new java.util.Timer().schedule(
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    state = PlayerState.GAMEOVER;
+                }
+            }, 
+            1000
+        );
     }
 
     private void handlePlayerInput(GameInput inputs){
