@@ -39,7 +39,6 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> groundObjects;
     private ArrayList<GameObject> pipeObjects;
     private ArrayList<GameObject> backgroundObjects;
-    private ArrayList<GameObject> uiObjects;
     private PlayerBird bird;
 
     private ScoreDisplay scoreDisplay;
@@ -93,7 +92,6 @@ public class FlappyJava extends Canvas {
         groundObjects = new ArrayList<GameObject>();
         pipeObjects = new ArrayList<GameObject>();
         backgroundObjects = new ArrayList<GameObject>();
-        uiObjects = new ArrayList<GameObject>();
         
         score = 0;
         gameStarted = false;
@@ -117,20 +115,24 @@ public class FlappyJava extends Canvas {
 
     private void addGameStartPromptUI(){
 
-        GameObject logo = new UIObject(camera, 0, -80, 89, 24, "images/ui/heading_logo.png", 100);
-        uiObjects.add(logo);
+        UIObject logo = new UIObject(camera, 0, -80, 89, 24, "images/ui/heading_logo.png", 100);
         addObject(logo);
 
-        GameObject startPrompt = new UIObject(camera, 57, 49, "images/ui/game_start_prompt.png", 100);
-        uiObjects.add(startPrompt);
+        UIObject startPrompt = new UIObject(camera, 57, 49, "images/ui/game_start_prompt.png", 100);
         addObject(startPrompt);
     }
 
     private void removeUIObjects(){
-        for (GameObject object : uiObjects){
+        ArrayList<GameObject> objectsToRemove = new ArrayList<GameObject>();
+        for (GameObject object : objects){
+            if (object instanceof UIObject){
+                objectsToRemove.add(object);
+            }
+        }
+
+        for (GameObject object : objectsToRemove){
             removeObject(object);
         }
-        uiObjects.clear();
     }
 
     // MAIN function
