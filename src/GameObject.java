@@ -6,10 +6,11 @@ import javax.imageio.ImageIO; // Image loader class
 import java.util.ArrayList;   // Flexible size arrays
 
 import java.awt.geom.*;
+import java.awt.image.*;
 
 public class GameObject extends Rectangle2D.Double{
 
-    private Image sprite;
+    private BufferedImage sprite;
     private Point spriteSize;
     public int zIndex = 0; // Sprites are sorted by Z indexes when rendering. Sprites with higher Z indexes render above ones with lower ones.
     public Point2D.Double scrollSpeed = new Point2D.Double(1,1); // Controls how quickly the sprite should move when the camera moves.
@@ -61,7 +62,7 @@ public class GameObject extends Rectangle2D.Double{
     // Sprite draw method.
     public void paint(Graphics g, Canvas c, Camera camera){
 
-        // If a sprite Image resource was assigned to the object:
+        // If a sprite BufferedImage resource was assigned to the object:
         if (sprite != null){
 
             // Get the position the object should render on the screen based on the camera's position and zoom level.
@@ -101,11 +102,11 @@ public class GameObject extends Rectangle2D.Double{
         return clickableArea.contains(mousePosition);
     }
 
-    private Image loadImage(String path){
+    private BufferedImage loadImage(String path){
         File f = new File(path); // Create a File object from the path.
 
         try{
-            Image img = ImageIO.read(f); // Read the image in from the file.
+            BufferedImage img = ImageIO.read(f); // Read the image in from the file.
             return img;
 
         } catch (IOException e) {
