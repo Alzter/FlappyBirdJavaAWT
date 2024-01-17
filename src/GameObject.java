@@ -14,10 +14,18 @@ public class GameObject extends Rectangle2D.Double{
     public int zIndex = 0; // Sprites are sorted by Z indexes when rendering. Sprites with higher Z indexes render above ones with lower ones.
     public Point2D.Double scrollSpeed = new Point2D.Double(1,1); // Controls how quickly the sprite should move when the camera moves.
     public boolean mouseOverObject = false; // True if the mouse is hovering over the game object.
+    private Point2D.Double uiPositionOffset = new Point2D.Double(0,0);
+
+    private boolean isUIObject = false;
 
     // Overwritable physics process function.
     public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera){
         mouseOverObject = getMouseHover(inputs.getMousePosition(), camera);
+
+        if (isUIObject){
+            x = camera.getAbsoluteX() - (width * 0.5) + uiPositionOffset.x;
+            y = camera.getAbsoluteY() - (height * 0.5) + uiPositionOffset.y;
+        }
     }
 
     // Create a GameObject without a sprite.
@@ -60,14 +68,18 @@ public class GameObject extends Rectangle2D.Double{
             width,
             height,
             spriteFilePath,
-            zIndex);
-        
+            zIndex
+        );
+
+        isUIObject = true;
     }
 
     // Create a game object at the center of the screen with a configurable X and Y offset.
     public GameObject(Camera c, double xOffset, double yOffset, double width, double height, String spriteFilePath, int zIndex){
         this(c,width,height,spriteFilePath,zIndex);
 
+        uiPositionOffset.x = xOffset;
+        uiPositionOffset.y = yOffset;
         x += xOffset;
         y += yOffset;
     }
