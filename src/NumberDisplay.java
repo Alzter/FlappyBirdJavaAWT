@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;         // Dictionaries.
 import java.awt.geom.*;
 
-public class ScoreDisplay {
+public class NumberDisplay {
     private Map<FontSize, ArrayList<Image>> digitSpriteDictionary;
 
     private final static Map<FontSize, String> fontFiles = Map.of(
@@ -26,7 +26,7 @@ public class ScoreDisplay {
         FontSize.SMALL, 6
     );
 
-    public ScoreDisplay(){
+    public NumberDisplay(){
         digitSpriteDictionary = loadDigitSprites();
     }
 
