@@ -39,7 +39,6 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> groundObjects;
     private ArrayList<GameObject> pipeObjects;
     private ArrayList<GameObject> backgroundObjects;
-    private GameObject gameRestartButton;
     private PlayerBird bird;
 
     private ScoreDisplay scoreDisplay;
@@ -88,7 +87,6 @@ public class FlappyJava extends Canvas {
     }
 
     public void initialiseGame(){
-        gameRestartButton = null;
         objects = new ArrayList<GameObject>();
         groundObjects = new ArrayList<GameObject>();
         pipeObjects = new ArrayList<GameObject>();
@@ -331,8 +329,17 @@ public class FlappyJava extends Canvas {
         GameObject scorePanel = new GameObject(camera, 0,-20, 113, 57, "images/ui/panel_final_score.png", 100);
         addObject(scorePanel);
 
-        GameObject restartButton = new GameObject(camera, 0, 40, 52, 29, "images/ui/button_restart.png", 100);
-        gameRestartButton = restartButton;
+        GameObject restartButton = new GameObject(camera, 0, 40, 52, 29, "images/ui/button_restart.png", 100){
+            @Override
+            public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera) {
+                
+                super.process(delta, inputs, objects, camera);
+
+                if (inputs.getMouseJustPressed() && mouseOverObject){
+                    restartGame();
+                }
+            }
+        };
         addObject(restartButton);
     }
 
