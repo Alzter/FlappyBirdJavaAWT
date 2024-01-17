@@ -39,6 +39,7 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> groundObjects;
     private ArrayList<GameObject> pipeObjects;
     private ArrayList<GameObject> backgroundObjects;
+    private GameObject gameRestartButton;
     private PlayerBird bird;
 
     private ScoreDisplay scoreDisplay;
@@ -87,6 +88,7 @@ public class FlappyJava extends Canvas {
     }
 
     public void initialiseGame(){
+        gameRestartButton = null;
         objects = new ArrayList<GameObject>();
         groundObjects = new ArrayList<GameObject>();
         pipeObjects = new ArrayList<GameObject>();
@@ -252,17 +254,27 @@ public class FlappyJava extends Canvas {
         }
     }
 
+    // Get the position of the mouse within the window. [0,0] is equal to the top-left hand side of the window.
+    private Point getMousePositionWithinWindow(){
+        return new Point(
+            MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x,
+            MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y
+        );
+    }
+
     // Game process function. Called every frame.
     private void process(){
         // How long did it take to render the previous frame?
         previousFrameTime = frameTime; // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
         delta = (previousFrameTime / targetFrameTime); // TODO: Placeholder behaviour sets previous frame time to target frame time, meaning delta will always be 1 regardless of execution speed.
 
+        // Update the mouse position for the input handler.
+        inputs.setMousePosition(getMousePositionWithinWindow());
         inputs.process();
 
         // Make all game objects process.
         for (GameObject object : objects){
-            object.process(delta, inputs, objects);
+            object.process(delta, inputs, objects, camera);
         }
 
         // If the bird has just collided with a ScorePoint object, increment the score value.
@@ -316,9 +328,12 @@ public class FlappyJava extends Canvas {
         GameObject gameOverLabel = new GameObject(camera, 0, -80, 96, 25, "images/ui/heading_game_over.png", 100);
         addObject(gameOverLabel);
 
-        GameObject scorePanel = new GameObject(camera, 113, 57, "images/ui/panel_final_score.png", 100);
-
+        GameObject scorePanel = new GameObject(camera, 0,-20, 113, 57, "images/ui/panel_final_score.png", 100);
         addObject(scorePanel);
+
+        GameObject restartButton = new GameObject(camera, 0, 40, 52, 29, "images/ui/button_restart.png", 100);
+        gameRestartButton = restartButton;
+        addObject(restartButton);
     }
 
     public void paint(Graphics g){

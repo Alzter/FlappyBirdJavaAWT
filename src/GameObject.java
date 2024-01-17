@@ -13,10 +13,11 @@ public class GameObject extends Rectangle2D.Double{
     private Point spriteSize;
     public int zIndex = 0; // Sprites are sorted by Z indexes when rendering. Sprites with higher Z indexes render above ones with lower ones.
     public Point2D.Double scrollSpeed = new Point2D.Double(1,1); // Controls how quickly the sprite should move when the camera moves.
+    public boolean mouseOverObject = false; // True if the mouse is hovering over the game object.
 
     // Overwritable physics process function.
-    public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
-        
+    public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera){
+        mouseOverObject = getMouseHover(inputs.getMousePosition(), camera);
     }
 
     // Create a GameObject without a sprite.
@@ -79,14 +80,41 @@ public class GameObject extends Rectangle2D.Double{
         if (sprite != null){
 
             // Get the position the object should render on the screen based on the camera's position and zoom level.
-            Point2D.Double screenPosition = new Point2D.Double((x - camera.getX()) * (camera.getZoomX() * scrollSpeed.x), (y - camera.getY()) * (camera.getZoomY() * scrollSpeed.y));
+            Point2D.Double screenPosition = getPositionOnScreen(camera);
             
             // Set "spriteSize" to how big we want the sprite to be in pixels.
-            Point2D.Double spriteCameraSize = new Point2D.Double(spriteSize.x * camera.getZoomX(), spriteSize.y * camera.getZoomY());
+            Point2D.Double spriteCameraSize = getSpriteSizeOnScreen(camera);
 
             // Get the Graphics object to draw the sprite in the Frame.
             g.drawImage(sprite, (int)screenPosition.x, (int)screenPosition.y, (int)spriteCameraSize.x, (int)spriteCameraSize.y, c);
         }
+    }
+
+    private Point2D.Double getPositionOnScreen(Camera camera){
+        return new Point2D.Double((x - camera.getX()) * (camera.getZoomX() * scrollSpeed.x), (y - camera.getY()) * (camera.getZoomY() * scrollSpeed.y));
+    }
+
+    private Point2D.Double getSpriteSizeOnScreen(Camera camera){
+        return new Point2D.Double(spriteSize.x * camera.getZoomX(), spriteSize.y * camera.getZoomY());
+    }
+
+    
+    // Returns true if the mouse is hovering over the object.
+    public boolean getMouseHover(Point mousePosition, Camera camera){
+        // Get the position the object should render on the screen based on the camera's position and zoom level.
+        Point2D.Double screenPosition = getPositionOnScreen(camera);
+
+        // Set "spriteSize" to how big we want the sprite to be in pixels.
+        Point2D.Double objectWidth = new Point2D.Double(width * camera.getZoomX(), height * camera.getZoomY());
+
+        return getMouseHover(mousePosition, screenPosition, objectWidth);
+
+    }
+
+    // Returns true if the mouse is hovering over the object.
+    private boolean getMouseHover(Point mousePosition, Point2D.Double screenPosition, Point2D.Double spriteCameraSize){
+        Rectangle clickableArea = new Rectangle((int)screenPosition.x, (int)screenPosition.y, (int)spriteCameraSize.x, (int)spriteCameraSize.y);
+        return clickableArea.contains(mousePosition);
     }
 
     private Image loadImage(String path){

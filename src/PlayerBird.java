@@ -32,7 +32,7 @@ public class PlayerBird extends GameObject{
         sfx = new SoundPlayer();
     }
 
-    public void process(double delta, GameInput inputs, ArrayList<GameObject> objects){
+    public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera){
 
         switch (state){
             case IDLE:
@@ -55,6 +55,7 @@ public class PlayerBird extends GameObject{
         isJustCollidingWithPoint = isCollidingWithPoint && !wasCollidingWithPointLastFrame;
         wasCollidingWithPointLastFrame = isCollidingWithPoint;
 
+        super.process(delta, inputs, objects, camera);
     }
 
     public void checkCollisions(ArrayList<GameObject> objects){
