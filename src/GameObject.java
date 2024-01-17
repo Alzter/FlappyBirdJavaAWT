@@ -48,6 +48,29 @@ public class GameObject extends Rectangle2D.Double{
         scrollSpeed.y = scrollSpeedY;
     }
 
+    // Create a game object at the center of the screen. A camera object is required for this.
+    public GameObject(Camera c, double width, double height, String spriteFilePath, int zIndex){
+
+        this(
+            // Get the local position for the center of the screen minus half of the object's width and height.
+            // This will give us a position that will draw the object at the center of the screen.
+            c.getAbsoluteX() - (width * 0.5),
+            c.getAbsoluteY() - (height * 0.5),
+            width,
+            height,
+            spriteFilePath,
+            zIndex);
+        
+    }
+
+    // Create a game object at the center of the screen with a configurable X and Y offset.
+    public GameObject(Camera c, double xOffset, double yOffset, double width, double height, String spriteFilePath, int zIndex){
+        this(c,width,height,spriteFilePath,zIndex);
+
+        x += xOffset;
+        y += yOffset;
+    }
+
 
     // Sprite draw method.
     public void paint(Graphics g, Canvas c, Camera camera){

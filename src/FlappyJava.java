@@ -308,6 +308,13 @@ public class FlappyJava extends Canvas {
     // Called a second after the bird dies.
     public void gameOverScreen(){
         sfx.playSound(uiWhooshSound);
+
+        GameObject gameOverLabel = new GameObject(camera, 0, -80, 96, 25, "images/ui/heading_game_over.png", 100);
+        addObject(gameOverLabel);
+
+        GameObject scorePanel = new GameObject(camera, 113, 57, "images/ui/panel_final_score.png", 100);
+
+        addObject(scorePanel);
     }
 
     public void paint(Graphics g){

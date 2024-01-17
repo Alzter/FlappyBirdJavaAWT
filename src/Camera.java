@@ -12,10 +12,19 @@ public class Camera{
         windowSize = new Point(windowSizeX, windowSizeY);
     }
 
+    public double getAbsoluteX(){
+        return this.position.x;
+    }
+    public double getAbsoluteY(){
+        return this.position.y;
+    }
+
+    // Returns the X co-ordinate in window space.
     public double getX(){
         return this.position.x - windowSize.x * 0.5 / zoom.x;
     }
 
+    // Returns the Y co-ordinate in window space.
     public double getY(){
         return this.position.y - windowSize.y * 0.5 / zoom.y;
     }
