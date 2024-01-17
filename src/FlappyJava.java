@@ -72,6 +72,7 @@ public class FlappyJava extends Canvas {
         window.add(this);
         window.pack();
         window.setVisible(true);
+        window.setResizable(false);
 
         numberDisplay = new NumberDisplay();
         sfx = new SoundPlayer();
