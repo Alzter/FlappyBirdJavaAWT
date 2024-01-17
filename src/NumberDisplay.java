@@ -83,7 +83,7 @@ public class NumberDisplay {
             digitSpriteSize.x *= camera.getZoomX();
             digitSpriteSize.y *= camera.getZoomY();
 
-            double digitX = x - digitSpriteSize.x * 0.5;
+            double digitX = x;
             double digitWidthZoomed = digitWidth * camera.getZoomX();
 
             // How many pixels would align the printed number to the left? 
@@ -91,10 +91,10 @@ public class NumberDisplay {
             
             switch (alignment){
                 case CENTER:
-                    digitX -= leftAlignmentOffset * 0.5;
+                    digitX -= (leftAlignmentOffset + digitSpriteSize.x) * 0.5;
                     break;
                 case LEFT:
-                    digitX -= leftAlignmentOffset * 1;
+                    digitX -= (leftAlignmentOffset + digitSpriteSize.x) * 1;
                     break;
                 case RIGHT:
                     break;
