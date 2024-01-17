@@ -39,6 +39,7 @@ public class FlappyJava extends Canvas {
     private ArrayList<GameObject> groundObjects;
     private ArrayList<GameObject> pipeObjects;
     private ArrayList<GameObject> backgroundObjects;
+    private ArrayList<GameObject> uiObjects;
     private PlayerBird bird;
 
     private ScoreDisplay scoreDisplay;
@@ -48,6 +49,7 @@ public class FlappyJava extends Canvas {
     private static final String uiWhooshSound = "sounds/swooshing.wav";
 
     public int score;
+    private boolean gameStarted = false;
     private boolean gameOver = false;
     
     // CONSTRUCTOR
@@ -91,7 +93,10 @@ public class FlappyJava extends Canvas {
         groundObjects = new ArrayList<GameObject>();
         pipeObjects = new ArrayList<GameObject>();
         backgroundObjects = new ArrayList<GameObject>();
+        uiObjects = new ArrayList<GameObject>();
+        
         score = 0;
+        gameStarted = false;
         gameOver = false;
 
         // Spawn the player at the center of the screen offset a bit upwards.
@@ -104,7 +109,23 @@ public class FlappyJava extends Canvas {
         roofYPosition = camera.getY();
         addGroundObjects();
         addBackgroundObjects();
+        
+        addGameStartPromptUI();
+
         process();
+    }
+
+    private void addGameStartPromptUI(){
+        GameObject startPrompt = new UIObject(camera, 57, 49, "images/ui/game_start_prompt.png", 100);
+        uiObjects.add(startPrompt);
+        addObject(startPrompt);
+    }
+
+    private void removeUIObjects(){
+        for (GameObject object : uiObjects){
+            removeObject(object);
+        }
+        uiObjects.clear();
     }
 
     // MAIN function
@@ -323,13 +344,13 @@ public class FlappyJava extends Canvas {
     }
 
     private void createGameOverUI(){
-        GameObject gameOverLabel = new GameObject(camera, 0, -70, 96, 25, "images/ui/heading_game_over.png", 100);
+        GameObject gameOverLabel = new UIObject(camera, 0, -70, 96, 25, "images/ui/heading_game_over.png", 100);
         addObject(gameOverLabel);
 
-        GameObject scorePanel = new GameObject(camera, 0,-10, 113, 57, "images/ui/panel_final_score.png", 100);
+        GameObject scorePanel = new UIObject(camera, 0,-10, 113, 57, "images/ui/panel_final_score.png", 100);
         addObject(scorePanel);
 
-        GameObject restartButton = new GameObject(camera, 0, 50, 52, 29, "images/ui/button_restart.png", 100){
+        GameObject restartButton = new UIObject(camera, 0, 50, 52, 29, "images/ui/button_restart.png", 100){
             @Override
             public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera) {
                 
