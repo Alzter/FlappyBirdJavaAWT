@@ -4,31 +4,52 @@ import java.io.File;          // Input/Output handling classes
 import java.io.IOException;   // Input/Output handling classes
 import javax.imageio.ImageIO; // Image loader class
 import java.util.ArrayList;   // Flexible size arrays
-
+import java.util.HashMap;
+import java.util.Map;         // Dictionaries.
 import java.awt.geom.*;
 
 public class ScoreDisplay {
-
     private final static int scoreYPosition = 32; // How low should the score appear on the screen?
-    private ArrayList<Image> digitSprites;
-    private final static String digitImagePath = "images/digits/";
-    private final static int digitWidth = 12;
+    private Map<FontSize, ArrayList<Image>> digitSpriteDictionary;
+
+    private final static Map<FontSize, String> fontFiles = Map.of(
+        FontSize.LARGE, "images/digits/",
+        FontSize.MEDIUM, "images/digits_medium/",
+        FontSize.SMALL, "images/digits_small/"
+
+    );
+
+    //private final static String digitImagePath = "images/digits/";
+
+    private final static Map<FontSize, Integer> digitWidths = Map.of(
+        FontSize.LARGE, 12,
+        FontSize.MEDIUM, 7,
+        FontSize.SMALL, 6
+    );
 
     public ScoreDisplay(){
-        digitSprites = loadDigitSprites();
+        digitSpriteDictionary = loadDigitSprites();
     }
 
     // Read in all of the number textures from the game and load them each as images.
-    private ArrayList<Image> loadDigitSprites(){
+    private Map<FontSize, ArrayList<Image>> loadDigitSprites(){
 
-        ArrayList<Image> digitSprites = new ArrayList<Image>();
-        for (int i=0; i<=9; i++){
-            String digitSpritePath = (digitImagePath + String.valueOf(i) + ".png");
-            Image digitSprite = loadImage(digitSpritePath);
-            digitSprites.add(digitSprite);
+        Map<FontSize, ArrayList<Image>> digitSpriteDictionary = new HashMap<FontSize, ArrayList<Image>>();
+
+        for (FontSize size : fontFiles.keySet()){
+            String digitImagePath = fontFiles.get(size);
+
+            ArrayList<Image> digitSprites = new ArrayList<Image>();
+            for (int i=0; i<=9; i++){
+                String digitSpritePath = (digitImagePath + String.valueOf(i) + ".png");
+                Image digitSprite = loadImage(digitSpritePath);
+                digitSprites.add(digitSprite);
+            }
+
+            digitSpriteDictionary.put(size, digitSprites);
         }
-        return digitSprites;
 
+        return digitSpriteDictionary;
     }
 
     private Image loadImage(String path){
@@ -44,13 +65,16 @@ public class ScoreDisplay {
         }
     }
 
-    public void paint(int score, Graphics g, Canvas c, Camera camera, Point windowSize){
+    public void paint(FontSize size, int number, Graphics g, Canvas c, Camera camera, Point windowSize){
 
-        ArrayList<Integer> scoreDigits = splitIntegerIntoDigits(score);
+        ArrayList<Image> digitSprites = digitSpriteDictionary.get(size);
+        int digitWidth = (int)digitWidths.get(size);
+        
+        ArrayList<Integer> digits = splitIntegerIntoDigits(number);
 
-        for (int digitOrder=0;digitOrder<scoreDigits.size();digitOrder++){
+        for (int digitOrder=0;digitOrder<digits.size();digitOrder++){
 
-            int digit = (int)scoreDigits.get(digitOrder);
+            int digit = (int)digits.get(digitOrder);
 
             // Get the Image for the digit.
             Image digitSprite = digitSprites.get(digit);
@@ -63,7 +87,7 @@ public class ScoreDisplay {
             double windowCenterX = windowSize.x * 0.5 - digitSpriteSize.x * 0.5;
             double digitWidthZoomed = digitWidth * camera.getZoomX();
 
-            windowCenterX -= Math.max(scoreDigits.size() - 1, 0) * digitWidthZoomed * 0.5;
+            windowCenterX -= Math.max(digits.size() - 1, 0) * digitWidthZoomed * 0.5;
 
             double digitPosition = windowCenterX + (digitOrder * digitWidthZoomed);
 
