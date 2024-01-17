@@ -363,13 +363,8 @@ public class FlappyJava extends Canvas {
 
         GameObject restartButton = new UIObject(camera, 0, 50, 52, 29, "images/ui/button_restart.png", 100){
             @Override
-            public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera) {
-                
-                super.process(delta, inputs, objects, camera);
-
-                if (inputs.getMouseJustPressed() && mouseOverObject){
-                    restartGame();
-                }
+            public void clicked() {
+                restartGame();
             }
         };
         addObject(restartButton);

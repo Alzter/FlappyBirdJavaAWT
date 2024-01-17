@@ -15,9 +15,18 @@ public class GameObject extends Rectangle2D.Double{
     public Point2D.Double scrollSpeed = new Point2D.Double(1,1); // Controls how quickly the sprite should move when the camera moves.
     public boolean mouseOverObject = false; // True if the mouse is hovering over the game object.
 
-    // Overwritable physics process function.
+    // Physics process function.
     public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera){
         mouseOverObject = getMouseHover(inputs.getMousePosition(), camera);
+
+        if (mouseOverObject && inputs.getMouseJustPressed()){
+            clicked();
+        }
+    }
+
+    // Function which runs when the object is clicked.
+    public void clicked(){
+
     }
 
     // Create a GameObject without a sprite.
