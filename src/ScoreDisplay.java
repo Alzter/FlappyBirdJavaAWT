@@ -9,7 +9,6 @@ import java.util.Map;         // Dictionaries.
 import java.awt.geom.*;
 
 public class ScoreDisplay {
-    private final static int scoreYPosition = 32; // How low should the score appear on the screen?
     private Map<FontSize, ArrayList<Image>> digitSpriteDictionary;
 
     private final static Map<FontSize, String> fontFiles = Map.of(
@@ -65,12 +64,12 @@ public class ScoreDisplay {
         }
     }
 
-    public void paint(FontSize size, FontAlign alignment, int number, Graphics g, Canvas c, Camera camera, Point windowSize){
+    public void paint(FontSize size, FontAlign alignment, int numberToPrint, double x, double y, Graphics g, Canvas c, Camera camera, Point windowSize){
 
         ArrayList<Image> digitSprites = digitSpriteDictionary.get(size);
         int digitWidth = (int)digitWidths.get(size);
         
-        ArrayList<Integer> digits = splitIntegerIntoDigits(number);
+        ArrayList<Integer> digits = splitIntegerIntoDigits(numberToPrint);
 
         for (int digitOrder=0;digitOrder<digits.size();digitOrder++){
 
@@ -84,7 +83,7 @@ public class ScoreDisplay {
             digitSpriteSize.x *= camera.getZoomX();
             digitSpriteSize.y *= camera.getZoomY();
 
-            double windowCenterX = windowSize.x * 0.5 - digitSpriteSize.x * 0.5;
+            double digitX = x - digitSpriteSize.x * 0.5;
             double digitWidthZoomed = digitWidth * camera.getZoomX();
 
             // How many pixels would align the printed number to the left? 
@@ -92,18 +91,18 @@ public class ScoreDisplay {
             
             switch (alignment){
                 case CENTER:
-                    windowCenterX -= leftAlignmentOffset * 0.5;
+                    digitX -= leftAlignmentOffset * 0.5;
                     break;
                 case LEFT:
-                    windowCenterX -= leftAlignmentOffset * 1;
+                    digitX -= leftAlignmentOffset * 1;
                     break;
                 case RIGHT:
                     break;
             }
 
-            double digitPosition = windowCenterX + (digitOrder * digitWidthZoomed);
+            double digitXPosition = digitX + (digitOrder * digitWidthZoomed);
 
-            g.drawImage(digitSprite, (int)digitPosition, scoreYPosition, (int)digitSpriteSize.x, (int)digitSpriteSize.y, c);
+            g.drawImage(digitSprite, (int)digitXPosition, (int)y, (int)digitSpriteSize.x, (int)digitSpriteSize.y, c);
 
         }
     }

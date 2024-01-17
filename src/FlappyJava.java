@@ -42,6 +42,7 @@ public class FlappyJava extends Canvas {
     private PlayerBird bird;
 
     private ScoreDisplay scoreDisplay;
+    private final static int scoreYPosition = 32; // How low should the score appear on the screen?
 
     private SoundPlayer sfx;
     private static final String scoreSound = "sounds/point.wav";
@@ -383,7 +384,7 @@ public class FlappyJava extends Canvas {
 
         // Draw the score display.
         if (bird.state != PlayerState.IDLE && bird.state != PlayerState.GAMEOVER){
-            scoreDisplay.paint(FontSize.LARGE, FontAlign.CENTER, score, g, this, camera, windowSize);
+            scoreDisplay.paint(FontSize.LARGE, FontAlign.CENTER, score, windowSize.x * 0.5, scoreYPosition, g, this, camera, windowSize);
         }
     }
 
