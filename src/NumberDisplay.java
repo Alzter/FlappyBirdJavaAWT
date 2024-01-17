@@ -4,7 +4,7 @@ import java.io.File;          // Input/Output handling classes
 import java.io.IOException;   // Input/Output handling classes
 import javax.imageio.ImageIO; // Image loader class
 import java.util.ArrayList;   // Flexible size arrays
-import java.util.HashMap;
+import java.util.HashMap;     // Dictionaries.
 import java.util.Map;         // Dictionaries.
 import java.awt.geom.*;
 
