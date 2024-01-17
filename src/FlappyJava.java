@@ -4,12 +4,10 @@ import java.lang.Math;
 
 import java.awt.event.*;      // Input handling classes
 
-import java.io.File;          // Input/Output handling classes
-import java.io.IOException;   // Input/Output handling classes
-import javax.imageio.ImageIO; // Image loader class
 import java.util.ArrayList;   // Flexible size arrays
 import java.util.Collections; // Array sorting methods
 import java.util.Comparator;
+import java.util.Map;         // Dictionaries.
 
 public class FlappyJava extends Canvas {
 
@@ -52,6 +50,14 @@ public class FlappyJava extends Canvas {
     public int highScore = 0; // The player's best score.
     private boolean gameStarted = false;
     private boolean gameOver = false;
+    private MedalType medal;
+
+    private Map<MedalType, String> medalSprites = Map.of(
+        MedalType.BRONZE, "images/ui/medal_bronze.png",
+        MedalType.SILVER, "images/ui/medal_silver.png",
+        MedalType.GOLD, "images/ui/medal_gold.png",
+        MedalType.PLATINUM, "images/ui/medal_platinum.png"
+    );
     
     // CONSTRUCTOR
     public FlappyJava(String windowName, int width, int height){
@@ -352,9 +358,14 @@ public class FlappyJava extends Canvas {
     // Called a second after the bird dies.
     public void gameOverScreen(){
         sfx.playSound(uiWhooshSound);
-        if (score > highScore){ highScore = score; }
+        gameOver();
 
         createGameOverUI();
+    }
+
+    public void gameOver(){
+        if (score > highScore){ highScore = score; }
+        medal = getMedalType(score);
     }
 
     private void createGameOverUI(){
@@ -364,6 +375,12 @@ public class FlappyJava extends Canvas {
         GameObject scorePanel = new UIObject(camera, 0,-10, 113, 57, "images/ui/panel_final_score.png", 100);
         addObject(scorePanel);
 
+        if (medal != null){
+            String medalSprite = medalSprites.get(medal);
+            GameObject medal = new UIObject(camera, -33,-7, 22,22, medalSprite, 200);
+            addObject(medal);
+        }
+
         GameObject restartButton = new UIObject(camera, 0, 50, 52, 29, "images/ui/button_restart.png", 100){
             @Override
             public void clicked() {
@@ -371,6 +388,14 @@ public class FlappyJava extends Canvas {
             }
         };
         addObject(restartButton);
+    }
+
+    private MedalType getMedalType(int score){
+        if (score >= 40){ return MedalType.PLATINUM; }
+        else if (score >= 30){ return MedalType.GOLD; }
+        else if (score >= 20){ return MedalType.SILVER; }
+        else if (score >= 10){ return MedalType.BRONZE; }
+        return null;
     }
 
     public void paint(Graphics g){
