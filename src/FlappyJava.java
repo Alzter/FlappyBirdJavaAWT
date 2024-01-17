@@ -49,6 +49,7 @@ public class FlappyJava extends Canvas {
     private static final String uiWhooshSound = "sounds/swooshing.wav";
 
     public int score;
+    public int highScore = 0; // The player's best score.
     private boolean gameStarted = false;
     private boolean gameOver = false;
     
@@ -351,6 +352,7 @@ public class FlappyJava extends Canvas {
     // Called a second after the bird dies.
     public void gameOverScreen(){
         sfx.playSound(uiWhooshSound);
+        if (score > highScore){ highScore = score; }
 
         createGameOverUI();
     }
@@ -385,6 +387,22 @@ public class FlappyJava extends Canvas {
         // Draw the score on the screen when the player is active.
         if (gameStarted && !gameOver){
             numberDisplay.paint(FontSize.LARGE, FontAlign.CENTER, score, windowSize.x * 0.5, scoreYPosition, g, this, camera, windowSize);
+        }
+
+        // When the game is over, draw the player score and high score.
+        if (gameOver){
+
+            // Draw the player's score.
+            numberDisplay.paint(FontSize.MEDIUM, FontAlign.LEFT, score,
+            windowSize.x * 0.5 + 45 * camera.getZoomX(),
+            windowSize.y * 0.5 - 22 * camera.getZoomY(),
+            g, this, camera, windowSize);
+
+            // Draw the player's high score.
+            numberDisplay.paint(FontSize.MEDIUM, FontAlign.LEFT, highScore,
+            windowSize.x * 0.5 + 45 * camera.getZoomX(),
+            windowSize.y * 0.5 - 1 * camera.getZoomY(),
+            g, this, camera, windowSize);
         }
     }
 
