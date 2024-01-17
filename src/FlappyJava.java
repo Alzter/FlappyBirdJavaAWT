@@ -323,13 +323,13 @@ public class FlappyJava extends Canvas {
     }
 
     private void createGameOverUI(){
-        GameObject gameOverLabel = new GameObject(camera, 0, -80, 96, 25, "images/ui/heading_game_over.png", 100);
+        GameObject gameOverLabel = new GameObject(camera, 0, -70, 96, 25, "images/ui/heading_game_over.png", 100);
         addObject(gameOverLabel);
 
-        GameObject scorePanel = new GameObject(camera, 0,-20, 113, 57, "images/ui/panel_final_score.png", 100);
+        GameObject scorePanel = new GameObject(camera, 0,-10, 113, 57, "images/ui/panel_final_score.png", 100);
         addObject(scorePanel);
 
-        GameObject restartButton = new GameObject(camera, 0, 40, 52, 29, "images/ui/button_restart.png", 100){
+        GameObject restartButton = new GameObject(camera, 0, 50, 52, 29, "images/ui/button_restart.png", 100){
             @Override
             public void process(double delta, GameInput inputs, ArrayList<GameObject> objects, Camera camera) {
                 
