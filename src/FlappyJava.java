@@ -383,7 +383,7 @@ public class FlappyJava extends Canvas {
 
         // Draw the score display.
         if (bird.state != PlayerState.IDLE && bird.state != PlayerState.GAMEOVER){
-            scoreDisplay.paint(FontSize.LARGE, score, g, this, camera, windowSize);
+            scoreDisplay.paint(FontSize.LARGE, FontAlign.CENTER, score, g, this, camera, windowSize);
         }
     }
 

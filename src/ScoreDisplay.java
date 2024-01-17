@@ -65,7 +65,7 @@ public class ScoreDisplay {
         }
     }
 
-    public void paint(FontSize size, int number, Graphics g, Canvas c, Camera camera, Point windowSize){
+    public void paint(FontSize size, FontAlign alignment, int number, Graphics g, Canvas c, Camera camera, Point windowSize){
 
         ArrayList<Image> digitSprites = digitSpriteDictionary.get(size);
         int digitWidth = (int)digitWidths.get(size);
@@ -87,7 +87,19 @@ public class ScoreDisplay {
             double windowCenterX = windowSize.x * 0.5 - digitSpriteSize.x * 0.5;
             double digitWidthZoomed = digitWidth * camera.getZoomX();
 
-            windowCenterX -= Math.max(digits.size() - 1, 0) * digitWidthZoomed * 0.5;
+            // How many pixels would align the printed number to the left? 
+            double leftAlignmentOffset = Math.max(digits.size() - 1, 0) * digitWidthZoomed;
+            
+            switch (alignment){
+                case CENTER:
+                    windowCenterX -= leftAlignmentOffset * 0.5;
+                    break;
+                case LEFT:
+                    windowCenterX -= leftAlignmentOffset * 1;
+                    break;
+                case RIGHT:
+                    break;
+            }
 
             double digitPosition = windowCenterX + (digitOrder * digitWidthZoomed);
 
