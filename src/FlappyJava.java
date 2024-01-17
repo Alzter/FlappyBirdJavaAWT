@@ -116,6 +116,11 @@ public class FlappyJava extends Canvas {
     }
 
     private void addGameStartPromptUI(){
+
+        GameObject logo = new UIObject(camera, 0, -80, 89, 24, "images/ui/heading_logo.png", 100);
+        uiObjects.add(logo);
+        addObject(logo);
+
         GameObject startPrompt = new UIObject(camera, 57, 49, "images/ui/game_start_prompt.png", 100);
         uiObjects.add(startPrompt);
         addObject(startPrompt);
@@ -291,6 +296,8 @@ public class FlappyJava extends Canvas {
         inputs.setMousePosition(getMousePositionWithinWindow());
         inputs.process();
 
+        updateCamera(camera);
+
         // Make all game objects process.
         for (GameObject object : objects){
             object.process(delta, inputs, objects, camera);
@@ -306,8 +313,6 @@ public class FlappyJava extends Canvas {
         bird.y = Math.max(bird.y, roofYPosition);
         bird.y = Math.min(bird.y, groundYPosition - bird.height);
 
-        updateCamera(camera);
-
         // Ensure the ground tiles repeat endlessly horizontally across the screen.
         updateArrayOfBackgroundObjectsToRepeatHorizontally(groundObjects, Ground.size.x);
 
@@ -319,6 +324,10 @@ public class FlappyJava extends Canvas {
 
         switch (bird.state){
             case ALIVE:
+                if (!gameStarted){
+                    gameStarted = true;
+                    removeUIObjects();
+                }
 
                 // If player is alive, spawn pipes in front of them.
                 spawnPipesInFrontOfPlayer(pipeObjects, pipeXDistance);
