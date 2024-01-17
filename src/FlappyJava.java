@@ -309,6 +309,10 @@ public class FlappyJava extends Canvas {
     public void gameOverScreen(){
         sfx.playSound(uiWhooshSound);
 
+        createGameOverUI();
+    }
+
+    private void createGameOverUI(){
         GameObject gameOverLabel = new GameObject(camera, 0, -80, 96, 25, "images/ui/heading_game_over.png", 100);
         addObject(gameOverLabel);
 
